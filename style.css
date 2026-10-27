@@ -431,7 +431,7 @@ input:checked + .slider:before {
 /* Layout 2 Colunas Desktop */
 @media (min-width: 768px) {
     .app-container {
-        max-width: 1200px;
+        max-width: 1600px; /* Valor alterado de 1200px para 1600px */
         display: grid;
         grid-template-columns: 1fr 380px;
         grid-template-areas:

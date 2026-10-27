@@ -80,10 +80,6 @@ if (document.readyState === "loading") {
 } else {
     iniciarAplicacao();
 }
-    document.addEventListener("DOMContentLoaded", iniciarAplicacao);
-} else {
-    iniciarAplicacao();
-}
 
 // 1. Acessibilidade (Tamanho da Fonte e Temas)
 function configurarAcessibilidade() {

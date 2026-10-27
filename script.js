@@ -28,7 +28,7 @@ const DADOS_PADRAO = {
 
 const EMOJIS_DISPONIVEIS = ["🏠", "🛒", "⚕️", "💼", "🏦", "🚗", "🎓", "✈️", "🐾", "👕", "🍔", "⚡", "📱", "🎉", "💳"];
 
-// Carregamento com proteção contra dados corrompidos
+// Carregamento seguro com proteção de dados
 let dados;
 try {
     const dadosMemoria = JSON.parse(localStorage.getItem("meuDashboardData"));
@@ -51,7 +51,7 @@ function salvarDados() {
     localStorage.setItem("meuDashboardData", JSON.stringify(dados));
 }
 
-// Inicialização segura
+// Inicialização segura da aplicação
 function iniciarAplicacao() {
     configurarAcessibilidade();
     configurarVoz();
@@ -67,7 +67,7 @@ if (document.readyState === "loading") {
     iniciarAplicacao();
 }
 
-// 1. Acessibilidade (Fonte e Temas)
+// 1. Acessibilidade (Tamanho da Fonte e Temas)
 function configurarAcessibilidade() {
     const slider = document.getElementById("font-slider");
     slider.addEventListener("input", (e) => {
@@ -131,7 +131,7 @@ function configurarVoz() {
     });
 }
 
-// 3. Gestão de Meses e Clonagem
+// 3. Gestão e Troca de Meses
 function atualizarSeletorMeses() {
     const seletor = document.getElementById("seletor-mes");
     seletor.innerHTML = "";
@@ -156,7 +156,6 @@ function renderizarDashboard() {
     container.innerHTML = "";
     const mesAtual = dados.meses[dados.mesAtivo];
 
-    // Totais Matemáticos
     const totalEntradas = mesAtual.entradas.reduce((acc, cur) => acc + Number(cur.valor || 0), 0);
     let totalDespesas = 0;
 
@@ -189,4 +188,272 @@ function renderizarDashboard() {
 
     // Cards de Despesas por Categoria
     mesAtual.categorias.forEach((cat, catIdx) => {
-        const subtotalCat = cat
+        const subtotalCat = cat.itens.reduce((acc, cur) => acc + Number(cur.valor || 0), 0);
+        totalDespesas += subtotalCat;
+
+        const card = document.createElement("div");
+        card.className = "card-categoria";
+        card.innerHTML = `
+            <div class="card-cabecalho">
+                <button class="btn-emoji" title="Trocar Ícone">${cat.emoji}</button>
+                <div class="titulo-box">
+                    <input class="titulo-nome" value="${cat.nome}">
+                    <span class="titulo-total">${formatarMoeda(subtotalCat)}</span>
+                </div>
+            </div>
+            <div class="item-lista" id="lista-itens-${catIdx}"></div>
+            <button class="btn-add-item">+ Adicionar Despesa</button>
+        `;
+
+        card.querySelector(".btn-emoji").onclick = () => abrirModalEmoji(catIdx);
+
+        const inputNomeCat = card.querySelector(".titulo-nome");
+        inputNomeCat.onchange = (e) => {
+            cat.nome = e.target.value;
+            salvarDados();
+            atualizarGrafico();
+        };
+
+        const listaItens = card.querySelector(`#lista-itens-${catIdx}`);
+        cat.itens.forEach((item, itemIdx) => {
+            listaItens.appendChild(criarLinhaItem(item, itemIdx, "despesa", catIdx));
+        });
+
+        card.querySelector(".btn-add-item").onclick = () => {
+            cat.itens.push({ nome: "Nova Conta", valor: 0, pago: false });
+            salvarDados();
+            renderizarDashboard();
+        };
+
+        container.appendChild(card);
+    });
+
+    // Saldo Geral e Termômetro Orçamentário
+    const saldo = totalEntradas - totalDespesas;
+    const saldoEl = document.getElementById("saldo-valor");
+    saldoEl.textContent = formatarMoeda(saldo);
+    saldoEl.style.color = saldo < 0 ? "var(--perigo)" : "var(--primaria)";
+
+    const percGasto = totalEntradas > 0 ? Math.min(Math.round((totalDespesas / totalEntradas) * 100), 100) : 0;
+    document.getElementById("termometro-progresso").style.width = `${percGasto}%`;
+    document.getElementById("termometro-texto").textContent = `${percGasto}% da renda gasta`;
+
+    atualizarGrafico();
+}
+
+// Linhas de Itens (Interruptor Visual + Risco no Texto)
+function criarLinhaItem(item, idx, tipo, catIdx = null) {
+    const linha = document.createElement("div");
+    linha.className = "item-linha";
+
+    const inputNome = document.createElement("input");
+    inputNome.className = `item-nome ${item.pago ? "pago" : ""}`;
+    inputNome.value = item.nome;
+    inputNome.onchange = (e) => {
+        item.nome = e.target.value;
+        salvarDados();
+    };
+
+    const inputValor = document.createElement("input");
+    inputValor.className = "item-valor";
+    inputValor.type = "number";
+    inputValor.value = item.valor;
+    inputValor.onchange = (e) => {
+        item.valor = Number(e.target.value);
+        salvarDados();
+        renderizarDashboard();
+    };
+
+    const switchLabel = document.createElement("label");
+    switchLabel.className = "switch";
+    switchLabel.innerHTML = `
+        <input type="checkbox" ${item.pago ? "checked" : ""}>
+        <span class="slider"></span>
+    `;
+
+    const checkbox = switchLabel.querySelector("input");
+    checkbox.onchange = () => {
+        item.pago = checkbox.checked;
+        if (item.pago) {
+            inputNome.classList.add("pago");
+        } else {
+            inputNome.classList.remove("pago");
+        }
+        salvarDados();
+    };
+
+    const btnRemover = document.createElement("button");
+    btnRemover.className = "btn-remover-item";
+    btnRemover.innerHTML = "×";
+    btnRemover.onclick = () => {
+        const mesAtual = dados.meses[dados.mesAtivo];
+        if (tipo === "entrada") {
+            mesAtual.entradas.splice(idx, 1);
+        } else {
+            mesAtual.categorias[catIdx].itens.splice(idx, 1);
+        }
+        salvarDados();
+        renderizarDashboard();
+    };
+
+    linha.appendChild(inputNome);
+    linha.appendChild(inputValor);
+    linha.appendChild(switchLabel);
+    linha.appendChild(btnRemover);
+
+    return linha;
+}
+
+// 5. Gráfico de Rosca com %
+function atualizarGrafico() {
+    const ctx = document.getElementById("grafico-despesas").getContext("2d");
+    const mesAtual = dados.meses[dados.mesAtivo];
+
+    const labels = [];
+    const valores = [];
+    let total = 0;
+
+    mesAtual.categorias.forEach(cat => {
+        const subtotal = cat.itens.reduce((acc, cur) => acc + Number(cur.valor || 0), 0);
+        if (subtotal > 0) {
+            labels.push(cat.nome);
+            valores.push(subtotal);
+            total += subtotal;
+        }
+    });
+
+    const labelsComPorcentagem = labels.map((nome, i) => {
+        const perc = total > 0 ? ((valores[i] / total) * 100).toFixed(1) : 0;
+        return `${nome} (${perc}%)`;
+    });
+
+    if (chartInstancia) chartInstancia.destroy();
+
+    chartInstancia = new Chart(ctx, {
+        type: "doughnut",
+        data: {
+            labels: labelsComPorcentagem,
+            datasets: [{
+                data: valores,
+                backgroundColor: [
+                    "#27ae60", "#2980b9", "#8e44ad", "#e67e22", "#e74c3c",
+                    "#16a085", "#f39c12", "#d35400", "#2c3e50", "#7f8c8d"
+                ],
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: "bottom",
+                    labels: { boxWidth: 14 }
+                }
+            }
+        }
+    });
+}
+
+// 6. Janelas Modais (Novo Mês e Emojis)
+function configurarModais() {
+    document.getElementById("btn-add-categoria").onclick = () => {
+        dados.meses[dados.mesAtivo].categorias.push({
+            emoji: "📦",
+            nome: "Nova Categoria",
+            itens: []
+        });
+        salvarDados();
+        renderizarDashboard();
+    };
+
+    const modalMes = document.getElementById("modal-novo-mes");
+    const inputNomeMes = document.getElementById("input-nome-mes");
+
+    document.getElementById("btn-novo-mes").onclick = () => {
+        inputNomeMes.value = "";
+        modalMes.classList.remove("hidden");
+        inputNomeMes.focus();
+    };
+
+    document.getElementById("modal-cancelar").onclick = () => {
+        modalMes.classList.add("hidden");
+    };
+
+    document.getElementById("modal-confirmar").onclick = () => {
+        const nome = inputNomeMes.value.trim();
+        if (!nome) return;
+
+        if (dados.meses[nome]) {
+            alert("Este mês já existe!");
+            return;
+        }
+
+        const mesClonado = JSON.parse(JSON.stringify(dados.meses[dados.mesAtivo]));
+        dados.meses[nome] = mesClonado;
+        dados.mesAtivo = nome;
+
+        salvarDados();
+        atualizarSeletorMeses();
+        renderizarDashboard();
+        modalMes.classList.add("hidden");
+    };
+
+    const modalEmoji = document.getElementById("modal-emoji");
+    const gridEmoji = document.getElementById("emoji-grid");
+
+    EMOJIS_DISPONIVEIS.forEach(emoji => {
+        const el = document.createElement("div");
+        el.className = "emoji-item";
+        el.textContent = emoji;
+        el.onclick = () => {
+            if (categoriaEditandoEmoji !== null) {
+                dados.meses[dados.mesAtivo].categorias[categoriaEditandoEmoji].emoji = emoji;
+                salvarDados();
+                renderizarDashboard();
+            }
+            modalEmoji.classList.add("hidden");
+        };
+        gridEmoji.appendChild(el);
+    });
+
+    document.getElementById("modal-emoji-fechar").onclick = () => {
+        modalEmoji.classList.add("hidden");
+    };
+}
+
+function abrirModalEmoji(catIdx) {
+    categoriaEditandoEmoji = catIdx;
+    document.getElementById("modal-emoji").classList.remove("hidden");
+}
+
+// 7. Backup e Restauração de Dados
+function configurarBackup() {
+    document.getElementById("btn-backup").onclick = () => {
+        const blob = new Blob([JSON.stringify(dados, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `backup_financeiro_${new Date().toISOString().slice(0, 10)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+    };
+
+    const inputRestaurar = document.getElementById("input-restaurar");
+    inputRestaurar.onchange = (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            try {
+                dados = JSON.parse(event.target.result);
+                salvarDados();
+                atualizarSeletorMeses();
+                renderizarDashboard();
+            } catch (err) {
+                alert("Erro ao ler o arquivo de backup.");
+            }
+        };
+        reader.readAsText(file);
+    };
+}

@@ -73,4 +73,34 @@
         <footer class="rodape-backup">
             <button id="btn-backup" class="btn-util">💾 Fazer Backup (Baixar)</button>
             <label for="input-restaurar" class="btn-util">📂 Restaurar Backup</label>
-            <input type="file" id="input-restaurar" accept=".json" style="display: none
+            <input type="file" id="input-restaurar" accept=".json" style="display: none;">
+        </footer>
+    </div>
+
+    <!-- Modal para Criar Novo Mês -->
+    <div id="modal-novo-mes" class="modal-overlay hidden">
+        <div class="modal-caixa">
+            <h3>Criar Novo Mês</h3>
+            <p>O novo mês copiará toda a estrutura e valores do mês atual.</p>
+            <input type="text" id="input-nome-mes" placeholder="Ex: Novembro 2026">
+            <div class="modal-acoes">
+                <button id="modal-cancelar" class="btn-secundario">Cancelar</button>
+                <button id="modal-confirmar" class="btn-primario">Criar Mês</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Seleção de Emojis -->
+    <div id="modal-emoji" class="modal-overlay hidden">
+        <div class="modal-caixa emoji-caixa">
+            <h3>Escolha um Ícone</h3>
+            <div class="emoji-grid" id="emoji-grid"></div>
+            <div class="modal-acoes">
+                <button id="modal-emoji-fechar" class="btn-secundario">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

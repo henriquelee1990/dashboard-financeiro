@@ -254,15 +254,18 @@ function criarLinhaItem(item, idx, tipo, catIdx = null) {
         salvarDados();
     };
 
-    const inputValor = document.createElement("input");
+const inputValor = document.createElement("input");
     inputValor.className = "item-valor";
-    inputValor.type = "number";
-    inputValor.value = item.valor;
-    inputValor.onchange = (e) => {
-        item.valor = Number(e.target.value);
+    inputValor.type = "text";
+    inputValor.value = formatarMoeda(item.valor);
+    inputValor.onfocus = () => { inputValor.value = item.valor || ""; };
+    inputValor.onblur = () => {
+        let texto = inputValor.value.replace(/[^\d,-]/g, "").replace(",", ".");
+        item.valor = parseFloat(texto) || 0;
         salvarDados();
         renderizarDashboard();
     };
+    inputValor.onkeydown = (e) => { if (e.key === "Enter") inputValor.blur(); };
 
     const switchLabel = document.createElement("label");
     switchLabel.className = "switch";

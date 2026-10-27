@@ -25,21 +25,8 @@ const DADOS_PADRAO = {
         }
     }
 };
-
-const EMOJIS_DISPONIVEIS = ["🏠", "🛒", "⚕️", "💼", "🏦", "🚗", "🎓", "✈️", "🐾", "👕", "🍔", "⚡", "📱", "🎉", "💳"];
-
-// Carregamento seguro com proteção de dados
-let dados;
-try {
-    const dadosMemoria = JSON.parse(localStorage.getItem("meuDashboardData"));
-    if (dadosMemoria && dadosMemoria.meses && dadosMemoria.mesAtivo && dadosMemoria.meses[dadosMemoria.mesAtivo]) {
-        dados = dadosMemoria;
-    } else {
-        dados = JSON.parse(JSON.stringify(DADOS_PADRAO));
-    }
-} catch (e) {
-    dados = JSON.parse(JSON.stringify(DADOS_PADRAO));
-}
+const API_URL = "https://script.google.com/macros/s/AKfycbwUQx6xkPdU6nTyN2lFEPi3K0i9y8iG4aHczI6wauClMbCmvJN4daf0D6qX2ltbdE6a/exec";
+let dados = JSON.parse(JSON.stringify(DADOS_PADRAO));
 
 let categoriaEditandoEmoji = null;
 let chartInstancia = null;
@@ -48,11 +35,38 @@ let vozFalando = false;
 const formatarMoeda = (val) => Number(val || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 
 function salvarDados() {
+    // Salva na nuvem silenciosamente
+    fetch(API_URL, {
+        method: "POST",
+        body: JSON.stringify(dados)
+    }).catch(console.error);
+    
+    // Mantém o salvamento local apenas como um backup de segurança
     localStorage.setItem("meuDashboardData", JSON.stringify(dados));
 }
 
-// Inicialização segura da aplicação
-function iniciarAplicacao() {
+// Inicialização com busca de dados online
+async function iniciarAplicacao() {
+    try {
+        // Busca os dados do seu cofre no Google Sheets
+        const resposta = await fetch(API_URL);
+        const dadosNuvem = await resposta.json();
+        
+        if (dadosNuvem && Object.keys(dadosNuvem).length > 0 && dadosNuvem.meses && dadosNuvem.mesAtivo) {
+            dados = dadosNuvem;
+        } else {
+            // Se a nuvem estiver vazia, tenta pegar do backup local
+            const dadosMemoria = JSON.parse(localStorage.getItem("meuDashboardData"));
+            if (dadosMemoria && dadosMemoria.meses && dadosMemoria.mesAtivo) {
+                dados = dadosMemoria;
+            }
+        }
+    } catch (e) {
+        console.error("Erro ao conectar com a nuvem, carregando dados locais.", e);
+        const dadosMemoria = JSON.parse(localStorage.getItem("meuDashboardData"));
+        if (dadosMemoria && dadosMemoria.meses) dados = dadosMemoria;
+    }
+
     configurarAcessibilidade();
     configurarVoz();
     configurarModais();
@@ -62,6 +76,10 @@ function iniciarAplicacao() {
 }
 
 if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", iniciarAplicacao);
+} else {
+    iniciarAplicacao();
+}
     document.addEventListener("DOMContentLoaded", iniciarAplicacao);
 } else {
     iniciarAplicacao();

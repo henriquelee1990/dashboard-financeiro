@@ -389,6 +389,8 @@ function configurarModais() {
         }
 
         const mesClonado = JSON.parse(JSON.stringify(dados.meses[dados.mesAtivo]));
+        mesClonado.entradas.forEach(e => e.pago = false);
+        mesClonado.categorias.forEach(c => c.itens.forEach(i => i.pago = false));
         dados.meses[nome] = mesClonado;
         dados.mesAtivo = nome;
 

@@ -428,3 +428,31 @@ input:checked + .slider:before {
 .btn-add-cat {
     width: 100%;
     padding: 12px
+/* Layout 2 Colunas Desktop */
+@media (min-width: 960px) {
+    .app-container {
+        max-width: 1200px;
+        display: grid;
+        grid-template-columns: 1fr 380px;
+        grid-template-areas:
+            "top top"
+            "resumo lateral"
+            "mes lateral"
+            "cards lateral"
+            "add lateral"
+            "rodape lateral";
+        column-gap: 28px;
+        align-items: start;
+    }
+    .top-bar { grid-area: top; }
+    .painel-resumo { grid-area: resumo; }
+    .linha-mes-saldo { grid-area: mes; }
+    #cards-container { grid-area: cards; }
+    .area-add-categoria { grid-area: add; }
+    .rodape-backup { grid-area: rodape; }
+    .grafico-secao {
+        grid-area: lateral;
+        position: sticky;
+        top: 24px;
+    }
+}

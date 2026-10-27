@@ -429,7 +429,7 @@ input:checked + .slider:before {
     width: 100%;
     padding: 12px
 /* Layout 2 Colunas Desktop */
-@media (min-width: 960px) {
+@media (min-width: 768px) {
     .app-container {
         max-width: 1200px;
         display: grid;

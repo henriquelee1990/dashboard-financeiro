@@ -427,4 +427,23 @@ input:checked + .slider:before {
 
 .btn-add-cat {
     width: 100%;
-    padding: 12px
+padding: 12px;
+    border: 2px dashed var(--primaria);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--primaria);
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Layout Desktop Expandido */
+@media (min-width: 768px) {
+    .app-container {
+        max-width: 96%;
+    }
+    
+    .grafico-secao {
+        max-width: 600px;
+        margin: 40px auto 24px auto;
+    }
+}

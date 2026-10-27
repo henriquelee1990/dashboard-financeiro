@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Financeiro</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="app-container">
+        <!-- Acessibilidade e Controles de Visão -->
+        <header class="top-bar">
+            <h1>Dashboard Financeiro</h1>
+            <div class="acessibilidade-controles">
+                <div class="controle-fonte">
+                    <span class="label-fonte">AA</span>
+                    <input type="range" id="font-slider" min="14" max="26" value="16" aria-label="Tamanho da fonte">
+                </div>
+                <div class="botoes-contraste" aria-label="Temas de contraste">
+                    <button class="btn-tema tema-padrao active" data-tema="padrao" title="Padrão Claro">A</button>
+                    <button class="btn-tema tema-amarelo" data-tema="amarelo" title="Amarelo no Preto">A</button>
+                    <button class="btn-tema tema-branco" data-tema="branco" title="Branco no Preto">A</button>
+                    <button class="btn-tema tema-sepia" data-tema="sepia" title="Preto no Sépia">A</button>
+                    <button class="btn-tema tema-ciano" data-tema="ciano" title="Ciano no Preto">A</button>
+                    <button class="btn-tema tema-verde" data-tema="verde" title="Verde no Preto">A</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Voz e Termômetro Orçamentário -->
+        <section class="painel-resumo">
+            <button id="btn-voz" class="btn-voz">
+                <span id="icone-voz">🔊</span> <span id="texto-voz">Ler Resumo</span>
+            </button>
+            <div class="termometro-container">
+                <div class="termometro-barra">
+                    <div id="termometro-progresso" class="termometro-progresso" style="width: 0%;"></div>
+                </div>
+                <span id="termometro-texto" class="termometro-texto">0% da renda gasta</span>
+            </div>
+        </section>
+
+        <!-- Navegação de Mês e Saldo Geral -->
+        <section class="linha-mes-saldo">
+            <div class="controle-mes">
+                <select id="seletor-mes" aria-label="Selecione o mês"></select>
+                <button id="btn-novo-mes" class="btn-secundario">+ Novo Mês</button>
+            </div>
+            <div class="saldo-geral">
+                <span>Saldo Geral:</span>
+                <strong id="saldo-valor">R$ 0,00</strong>
+            </div>
+        </section>
+
+        <!-- Grade de Caixas (Entradas e Categorias) -->
+        <main id="cards-container" class="cards-grid"></main>
+
+        <!-- Adicionar Categoria -->
+        <div class="area-add-categoria">
+            <button id="btn-add-categoria" class="btn-add-cat">+ Adicionar Nova Categoria</button>
+        </div>
+
+        <!-- Gráfico de Rosca com % -->
+        <section class="grafico-secao">
+            <h2>Distribuição de Gastos</h2>
+            <div class="grafico-wrapper">
+                <canvas id="grafico-despesas"></canvas>
+            </div>
+        </section>
+
+        <!-- Backup e Restauração -->
+        <footer class="rodape-backup">
+            <button id="btn-backup" class="btn-util">💾 Fazer Backup (Baixar)</button>
+            <label for="input-restaurar" class="btn-util">📂 Restaurar Backup</label>
+            <input type="file" id="input-restaurar" accept=".json" style="display: none

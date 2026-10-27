@@ -89,7 +89,7 @@ body {
 }
 
 .app-container {
-    max-width: 900px;
+    max-width: 96%; /* Alterado de 900px para 96% para fluidez */
     margin: 0 auto;
     padding: 24px 16px;
 }

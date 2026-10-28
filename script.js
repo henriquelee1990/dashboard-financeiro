@@ -333,7 +333,9 @@ const inputValor = document.createElement("input");
 
    const switchLabel = document.createElement("label");
     switchLabel.className = "switch";
-    
+    const switchSlider = document.createElement("span");
+    switchSlider.className = "slider";
+    switchLabel.appendChild(switchSlider);
     // Suporte aos estados: 0 = aberto, 1 = caixinha, 2 = pago (compatível com true/false antigos)
     let estadoAtual = item.estado !== undefined ? item.estado : (item.pago ? 2 : 0);
     aplicarClasseEstado(switchLabel, inputNome, linha, estadoAtual);

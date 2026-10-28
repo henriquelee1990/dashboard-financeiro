@@ -667,6 +667,17 @@ body {
     color: var(--texto-secundario);
     font-size: 1em;
 }
+// 8. Barra Fixa Inteligente (Scroll)
+window.addEventListener("scroll", () => {
+    const barraFixa = document.getElementById("barra-fixa");
+    if (barraFixa) {
+        if (window.scrollY > 250) {
+            barraFixa.classList.add("visivel");
+        } else {
+            barraFixa.classList.remove("visivel");
+        }
+    }
+});
 /* Layout Desktop Expandido */
 @media (min-width: 768px) {
     .app-container {

@@ -412,10 +412,10 @@ function atualizarGrafico() {
                 borderWidth: 2
             }]
         },
-        options: {
+options: {
             responsive: true,
             plugins: {
-legend: {
+                legend: {
                     position: window.innerWidth >= 768 ? "right" : "bottom",
                     labels: {
                         boxWidth: Math.round(Number(document.getElementById("font-slider")?.value || 16) * 0.9),
@@ -425,9 +425,9 @@ legend: {
                         }
                     }
                 }
+            }
+        }
     });
-}
-
 // 6. Janelas Modais (Novo Mês e Emojis)
 function configurarModais() {
     document.getElementById("btn-add-categoria").onclick = () => {

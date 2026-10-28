@@ -355,7 +355,8 @@ body {
 }
 
 .item-valor {
-    width: 100px;
+    width: 7.5em;
+    min-width: 90px;
     text-align: right;
     background: transparent;
     border: 1px solid var(--borda-cor);

@@ -37,8 +37,7 @@ let categoriaEditandoEmoji = null;
 let chartInstancia = null;
 let vozFalando = false;
 
-const formatarMoeda = (val) => Number(val || 0).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-
+const formatarMoeda = (val) => Math.round(Number(val || 0)).toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 0, maximumFractionDigits: 0 });
 function salvarDados() {
     // Salva na nuvem silenciosamente
     fetch(API_URL, {
@@ -310,7 +309,7 @@ const inputValor = document.createElement("input");
     inputValor.onfocus = () => { inputValor.value = item.valor || ""; };
     inputValor.onblur = () => {
         let texto = inputValor.value.replace(/[^\d,-]/g, "").replace(",", ".");
-        item.valor = parseFloat(texto) || 0;
+        item.valor = Math.round(parseFloat(texto) || 0);
         salvarDados();
         renderizarDashboard();
     };

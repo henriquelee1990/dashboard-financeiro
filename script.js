@@ -35,7 +35,7 @@ let dados = JSON.parse(JSON.stringify(DADOS_PADRAO));
 
 let categoriaEditandoEmoji = null;
 let chartInstancia = null;
-let vozFalando = false;
+let chartHistoricoInstancia = null;let vozFalando = false;
 
 const formatarMoeda = (val) => Math.round(Number(val || 0)).toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 0, maximumFractionDigits: 0 });
 function salvarDados() {

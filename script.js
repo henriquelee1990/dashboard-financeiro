@@ -223,8 +223,8 @@ function renderizarDashboard() {
     `;
     container.appendChild(cardEntradas);
 
-   const listaEntradas = cardEntradas.querySelector("#lista-entradas");
-   mesAtual.entradas.sort((a, b) => {
+  const listaEntradas = cardEntradas.querySelector("#lista-entradas");
+    mesAtual.entradas.sort((a, b) => {
         const va = Number(a.valor || 0);
         const vb = Number(b.valor || 0);
         if (va >= 0 && vb < 0) return -1;
@@ -232,7 +232,9 @@ function renderizarDashboard() {
         if (va >= 0 && vb >= 0) return vb - va;
         return va - vb;
     });
-
+    mesAtual.entradas.forEach((item, idx) => {
+        listaEntradas.appendChild(criarLinhaItem(item, idx, "entrada"));
+    });
     cardEntradas.querySelector("#btn-add-entrada").onclick = () => {
         mesAtual.entradas.push({ nome: "Nova Renda", valor: 0, pago: false });
         salvarDados();

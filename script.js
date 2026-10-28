@@ -610,7 +610,7 @@ function atualizarGrafico() {
         }
     }
 }
-}// 6. Janelas Modais (Novo Mês e Emojis)
+// 6. Janelas Modais (Novo Mês e Emojis)
 function configurarModais() {
     document.getElementById("btn-add-categoria").onclick = () => {
         dados.meses[dados.mesAtivo].categorias.push({

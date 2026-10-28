@@ -564,8 +564,8 @@ function configurarModais() {
             cardsContainer.classList.add("hidden");
             areaAddCategoria.classList.add("hidden");
             graficoSecao.classList.add("hidden");
-            telaReembolsos.classList.remove("hidden");
-        };
+telaReembolsos.classList.remove("hidden");
+            renderizarTabelaReembolsos();        };
 
         btnVoltar.onclick = () => {
             telaReembolsos.classList.add("hidden");
@@ -679,3 +679,134 @@ window.addEventListener("scroll", () => {
         }
     }
 });
+// 9. Gestão de Reembolsos Médicos
+function renderizarTabelaReembolsos() {
+    const container = document.querySelector("#tela-reembolsos .tabela-responsiva");
+    if (!container) return;
+
+    if (!dados.reembolsos) {
+        dados.reembolsos = [];
+    }
+
+    container.innerHTML = "";
+
+    const tabela = document.createElement("table");
+    tabela.className = "tabela-reembolsos";
+
+    tabela.innerHTML = `
+        <thead>
+            <tr>
+                <th style="min-width: 95px;">Consulta</th>
+                <th style="min-width: 130px;">Prestador / Médico</th>
+                <th style="min-width: 120px;">Especialidade</th>
+                <th style="min-width: 105px;">Valor Pago</th>
+                <th style="min-width: 125px;">Status</th>
+                <th style="min-width: 105px;">Reembolso</th>
+                <th style="min-width: 105px;">Custo Real</th>
+                <th style="min-width: 105px;">Previsão</th>
+                <th style="min-width: 130px;">Observação</th>
+                <th style="width: 36px; text-align: center;">×</th>
+            </tr>
+        </thead>
+        <tbody id="corpo-tabela-reembolsos"></tbody>
+    `;
+
+    const tbody = tabela.querySelector("#corpo-tabela-reembolsos");
+
+    if (dados.reembolsos.length === 0) {
+        const trVazia = document.createElement("tr");
+        trVazia.innerHTML = `
+            <td colspan="10" style="text-align: center; padding: 24px; color: var(--texto-secundario);">
+                Nenhum reembolso cadastrado. Clique no botão abaixo para adicionar o primeiro.
+            </td>
+        `;
+        tbody.appendChild(trVazia);
+    } else {
+        dados.reembolsos.forEach((item, idx) => {
+            const tr = document.createElement("tr");
+
+            const vPago = Number(item.valorPago || 0);
+            const vReemb = Number(item.valorReembolsado || 0);
+            const custoReal = Math.max(0, vPago - vReemb);
+
+            tr.innerHTML = `
+                <td><input type="text" value="${item.dataConsulta || ''}" placeholder="dd/mm/aa" style="width: 100%; background: transparent; border: 1px solid var(--borda-cor); color: var(--texto-cor); padding: 4px; border-radius: 4px;"></td>
+                <td><input type="text" value="${item.medico || ''}" placeholder="Nome do médico" style="width: 100%; background: transparent; border: 1px solid var(--borda-cor); color: var(--texto-cor); padding: 4px; border-radius: 4px;"></td>
+                <td><input type="text" value="${item.especialidade || ''}" placeholder="Especialidade" style="width: 100%; background: transparent; border: 1px solid var(--borda-cor); color: var(--texto-cor); padding: 4px; border-radius: 4px;"></td>
+                <td><input type="text" value="${item.valorPago !== undefined ? item.valorPago : ''}" placeholder="0" style="width: 100%; text-align: right; background: transparent; border: 1px solid var(--borda-cor); color: var(--texto-cor); padding: 4px; border-radius: 4px;"></td>
+                <td>
+                    <select style="width: 100%; background: var(--card-bg); border: 1px solid var(--borda-cor); color: var(--texto-cor); padding: 4px; border-radius: 4px;">
+                        <option value="Solicitado" ${item.status === 'Solicitado' ? 'selected' : ''}>Solicitado</option>
+                        <option value="Fila de pgmto" ${item.status === 'Fila de pgmto' ? 'selected' : ''}>Fila de pgmto</option>
+                        <option value="Pago" ${item.status === 'Pago' ? 'selected' : ''}>Pago</option>
+                        <option value="Negado" ${item.status === 'Negado' ? 'selected' : ''}>Negado</option>
+                    </select>
+                </td>
+                <td><input type="text" value="${item.valorReembolsado !== undefined ? item.valorReembolsado : ''}" placeholder="0" style="width: 100%; text-align: right; background: transparent; border: 1px solid var(--borda-cor); color: var(--texto-cor); padding: 4px; border-radius: 4px;"></td>
+                <td class="custo-real-col" style="font-weight: 700; text-align: right;">${formatarMoeda(custoReal)}</td>
+                <td><input type="text" value="${item.dataCredito || ''}" placeholder="dd/mm/aa" style="width: 100%; background: transparent; border: 1px solid var(--borda-cor); color: var(--texto-cor); padding: 4px; border-radius: 4px;"></td>
+                <td><input type="text" value="${item.obs || ''}" placeholder="Observação" style="width: 100%; background: transparent; border: 1px solid var(--borda-cor); color: var(--texto-cor); padding: 4px; border-radius: 4px;"></td>
+                <td style="text-align: center;"><button class="btn-remover-item" title="Excluir">×</button></td>
+            `;
+
+            const campos = tr.querySelectorAll("input");
+            const selectStatus = tr.querySelector("select");
+            const btnRemover = tr.querySelector(".btn-remover-item");
+
+            campos[0].onchange = (e) => { item.dataConsulta = e.target.value; salvarDados(); };
+            campos[1].onchange = (e) => { item.medico = e.target.value; salvarDados(); };
+            campos[2].onchange = (e) => { item.especialidade = e.target.value; salvarDados(); };
+
+            const calcularCusto = () => {
+                let pago = parseFloat(String(campos[3].value).replace(/[^\d,.-]/g, "").replace(",", ".")) || 0;
+                let reemb = parseFloat(String(campos[4].value).replace(/[^\d,.-]/g, "").replace(",", ".")) || 0;
+                item.valorPago = pago;
+                item.valorReembolsado = reemb;
+                tr.querySelector(".custo-real-col").textContent = formatarMoeda(Math.max(0, pago - reemb));
+                salvarDados();
+            };
+
+            campos[3].onchange = calcularCusto;
+            campos[4].onchange = calcularCusto;
+            selectStatus.onchange = (e) => { item.status = e.target.value; salvarDados(); };
+            campos[5].onchange = (e) => { item.dataCredito = e.target.value; salvarDados(); };
+            campos[6].onchange = (e) => { item.obs = e.target.value; salvarDados(); };
+
+            btnRemover.onclick = () => {
+                if (confirm(`Remover reembolso de "${item.medico || 'sem identificação'}"?`)) {
+                    dados.reembolsos.splice(idx, 1);
+                    salvarDados();
+                    renderizarTabelaReembolsos();
+                }
+            };
+
+            tbody.appendChild(tr);
+        });
+    }
+
+    container.appendChild(tabela);
+
+    let btnAdd = document.getElementById("btn-add-reembolso");
+    if (!btnAdd) {
+        btnAdd = document.createElement("button");
+        btnAdd.id = "btn-add-reembolso";
+        btnAdd.className = "btn-secundario";
+        btnAdd.style.marginTop = "14px";
+        btnAdd.textContent = "+ Adicionar Reembolso";
+        container.parentNode.appendChild(btnAdd);
+    }
+    btnAdd.onclick = () => {
+        dados.reembolsos.push({
+            dataConsulta: "",
+            medico: "",
+            especialidade: "",
+            valorPago: 0,
+            status: "Solicitado",
+            valorReembolsado: 0,
+            dataCredito: "",
+            obs: ""
+        });
+        salvarDados();
+        renderizarTabelaReembolsos();
+    };
+}

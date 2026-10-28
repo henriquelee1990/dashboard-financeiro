@@ -88,8 +88,9 @@ if (document.readyState === "loading") {
 // 1. Acessibilidade (Tamanho da Fonte e Temas)
 function configurarAcessibilidade() {
     const slider = document.getElementById("font-slider");
-    slider.addEventListener("input", (e) => {
+slider.addEventListener("input", (e) => {
         document.documentElement.style.setProperty("--app-font-size", `${e.target.value}px`);
+        atualizarGrafico();
     });
 
     document.querySelectorAll(".btn-tema").forEach(btn => {
@@ -416,10 +417,14 @@ function atualizarGrafico() {
             plugins: {
 legend: {
                     position: window.innerWidth >= 768 ? "right" : "bottom",
-                    labels: { boxWidth: 14, padding: 12 }
+                    labels: {
+                        boxWidth: Math.round(Number(document.getElementById("font-slider")?.value || 16) * 0.9),
+                        padding: 12,
+                        font: {
+                            size: Number(document.getElementById("font-slider")?.value || 16)
+                        }
+                    }
                 }
-            }
-        }
     });
 }
 

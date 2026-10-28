@@ -313,13 +313,15 @@ body {
     border: none;
     color: var(--texto-cor);
     outline: none;
-    width: 65%;
+    flex: 1;
+    min-width: 0;
 }
 
 .titulo-total {
     font-size: 1.1em;
     font-weight: 700;
     color: var(--texto-cor);
+    white-space: nowrap;
 }
 
 /* Lista de Itens */

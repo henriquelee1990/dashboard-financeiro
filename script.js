@@ -557,37 +557,46 @@ function abrirModalEmoji(catIdx) {
     categoriaEditandoEmoji = catIdx;
     document.getElementById("modal-emoji").classList.remove("hidden");
 }
-function abrirModalAPagar() {
-    const modalAPagar = document.getElementById("modal-a-pagar");
-    const listaEl = document.getElementById("lista-a-pagar");
-    const totalEl = document.getElementById("total-a-pagar-modal");
+function abrirModalStatus(abaAtiva) {
+    const modalStatus = document.getElementById("modal-status");
+    const listaEl = document.getElementById("lista-status");
+    const totalEl = document.getElementById("total-status-modal");
     listaEl.innerHTML = "";
 
     const mesAtual = dados.meses[dados.mesAtivo];
-    const pendencias = [];
-    let totalPendente = 0;
+    const itensFiltrados = [];
+    let totalFiltrado = 0;
 
     mesAtual.categorias.forEach(cat => {
         cat.itens.forEach(item => {
             const val = Number(item.valor || 0);
-            if (!item.pago && val > 0) {
-                pendencias.push({
+            let estadoAtual = item.estado !== undefined ? item.estado : (item.pago ? 2 : 0);
+            
+            if (estadoAtual === abaAtiva && val > 0) {
+                itensFiltrados.push({
                     emoji: cat.emoji,
                     categoria: cat.nome,
                     nome: item.nome || "Sem nome",
                     valor: val
                 });
-                totalPendente += val;
+                totalFiltrado += val;
             }
         });
     });
 
-    totalEl.textContent = formatarMoeda(totalPendente);
+    totalEl.textContent = formatarMoeda(totalFiltrado);
 
-    if (pendencias.length === 0) {
-        listaEl.innerHTML = `<div class="lista-vazia">🎉 Nenhuma conta pendente para este mês!</div>`;
+    if (abaAtiva === 0) totalEl.style.color = "var(--perigo)";
+    else if (abaAtiva === 1) totalEl.style.color = "#8a05be";
+    else totalEl.style.color = "var(--primaria)";
+
+    if (itensFiltrados.length === 0) {
+        let msg = "🎉 Nenhuma conta pendente para este mês!";
+        if (abaAtiva === 1) msg = "Nenhum dinheiro na caixinha ainda.";
+        if (abaAtiva === 2) msg = "Nenhuma conta paga ainda.";
+        listaEl.innerHTML = `<div class="lista-vazia">${msg}</div>`;
     } else {
-        pendencias.forEach(p => {
+        itensFiltrados.forEach(p => {
             const linha = document.createElement("div");
             linha.className = "item-pendente";
             linha.innerHTML = `
@@ -603,8 +612,7 @@ function abrirModalAPagar() {
             listaEl.appendChild(linha);
         });
     }
-
-    modalAPagar.classList.remove("hidden");
+    modalStatus.classList.remove("hidden");
 }
 // 7. Backup e Restauração de Dados
 function configurarBackup() {

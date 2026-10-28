@@ -564,7 +564,81 @@ input:checked + .slider:before {
 .emoji-item:hover {
     background: var(--caixa-titulo-bg);
 }
+/* Modal A Pagar */
+.modal-a-pagar-caixa {
+    max-width: 460px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+}
 
+.modal-a-pagar-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.total-destaque {
+    font-size: 1.2em;
+    font-weight: 700;
+    color: var(--perigo);
+}
+
+.lista-pendencias {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin: 14px 0;
+    overflow-y: auto;
+    max-height: 52vh;
+    padding-right: 4px;
+}
+
+.item-pendente {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 12px;
+    background: var(--caixa-titulo-bg);
+    border: 1px solid var(--borda-cor);
+    border-radius: 8px;
+    font-size: 0.95em;
+}
+
+.item-pendente-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.item-pendente-cat {
+    font-size: 0.8em;
+    color: var(--texto-secundario);
+}
+
+.item-pendente-nome {
+    font-weight: 600;
+    color: var(--texto-cor);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.item-pendente-valor {
+    font-weight: 700;
+    color: var(--texto-cor);
+    white-space: nowrap;
+    margin-left: 12px;
+}
+
+.lista-vazia {
+    text-align: center;
+    padding: 24px 0;
+    color: var(--texto-secundario);
+    font-size: 1em;
+}
 /* Layout Desktop Expandido */
 @media (min-width: 768px) {
     .app-container {

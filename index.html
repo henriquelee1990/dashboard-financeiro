@@ -85,11 +85,47 @@
             <button id="btn-add-categoria" class="btn-add-cat">+ Adicionar Nova Categoria</button>
         </div>
 
-        <!-- Gráfico de Rosca com % -->
-        <section class="grafico-secao">
-            <h2>Distribuição de Gastos</h2>
-            <div class="grafico-wrapper">
-                <canvas id="grafico-despesas"></canvas>
+<!-- Central Analítica & Tomada de Decisão -->
+        <section class="analise-secao">
+            <!-- 1. Indicadores Chave (KPIs) -->
+            <div class="kpis-grid">
+                <div class="kpi-card">
+                    <span class="kpi-label">Taxa de Poupança</span>
+                    <strong class="kpi-valor" id="kpi-poupanca">0%</strong>
+                    <span class="kpi-sub" id="kpi-poupanca-sub">Guardado / Investido</span>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-label">Comprometimento da Renda</span>
+                    <strong class="kpi-valor" id="kpi-comprometimento">0%</strong>
+                    <span class="kpi-sub" id="kpi-comprometimento-sub">Total de despesas</span>
+                </div>
+                <div class="kpi-card">
+                    <span class="kpi-label">Média Diária de Gastos</span>
+                    <strong class="kpi-valor" id="kpi-diario">R$ 0</strong>
+                    <span class="kpi-sub">Ritmo do mês ativo</span>
+                </div>
+            </div>
+
+            <!-- 2. Gráficos Comparativos (Rosca + Histórico Mensal) -->
+            <div class="graficos-grid">
+                <div class="grafico-box">
+                    <h3>Distribuição de Gastos</h3>
+                    <div class="grafico-wrapper">
+                        <canvas id="grafico-despesas"></canvas>
+                    </div>
+                </div>
+                <div class="grafico-box">
+                    <h3>Evolução: Entradas vs Despesas</h3>
+                    <div class="grafico-wrapper">
+                        <canvas id="grafico-historico"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Maiores Despesas Individuais -->
+            <div class="top-gastos-box">
+                <h3>Top 5 Maiores Despesas do Mês</h3>
+                <div id="lista-top-despesas" class="lista-top-despesas"></div>
             </div>
         </section>
 

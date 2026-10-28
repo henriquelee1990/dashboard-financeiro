@@ -37,9 +37,27 @@ let categoriaEditandoEmoji = null;
 let chartInstancia = null;
 let chartHistoricoInstancia = null;
 let chartInvestimentosInstancia = null;
-
+// Controle de Histórico (Desfazer / Refazer)
+let historicoDesfazer = [];
+let historicoRefazer = [];
+const LIMITE_HISTORICO = 30;
+let estadoAnteriorStr = "";
 const formatarMoeda = (val) => Math.round(Number(val || 0)).toLocaleString("pt-BR", { style: "currency", currency: "BRL", minimumFractionDigits: 0, maximumFractionDigits: 0 });
-function salvarDados() {
+function salvarDados(gravarHistorico = true) {
+    if (gravarHistorico && typeof dados !== "undefined" && dados) {
+        const novoEstadoStr = JSON.stringify(dados);
+        if (!estadoAnteriorStr) {
+            estadoAnteriorStr = novoEstadoStr;
+        } else if (novoEstadoStr !== estadoAnteriorStr) {
+            historicoDesfazer.push(estadoAnteriorStr);
+            if (historicoDesfazer.length > LIMITE_HISTORICO) {
+                historicoDesfazer.shift();
+            }
+            historicoRefazer = [];
+            estadoAnteriorStr = novoEstadoStr;
+        }
+    }
+
     // Salva na nuvem silenciosamente
     fetch(API_URL, {
         method: "POST",
@@ -201,7 +219,9 @@ function atualizarSeletorMeses() {
 }
 
 // 4. Renderização do Painel Completo
-function renderizarDashboard() {
+function renderizarDashboard() {if (!estadoAnteriorStr && typeof dados !== "undefined" && dados) {
+        estadoAnteriorStr = JSON.stringify(dados);
+    }
     const container = document.getElementById("cards-container");
     container.innerHTML = "";
     const mesAtual = dados.meses[dados.mesAtivo];
@@ -967,3 +987,69 @@ function renderizarTabelaReembolsos() {
         renderizarTabelaReembolsos();
     };
 }
+// 10. Sistema de Desfazer (Undo) e Refazer (Redo)
+function desfazerAcao() {
+    if (historicoDesfazer.length === 0) return;
+
+    historicoRefazer.push(JSON.stringify(dados));
+
+    const estadoAnterior = historicoDesfazer.pop();
+    Object.keys(dados).forEach(chave => delete dados[chave]);
+    Object.assign(dados, JSON.parse(estadoAnterior));
+    estadoAnteriorStr = estadoAnterior;
+
+    salvarDados(false);
+
+    const telaReembolsos = document.getElementById("tela-reembolsos");
+    if (telaReembolsos && !telaReembolsos.classList.contains("hidden")) {
+        renderizarTabelaReembolsos();
+    } else {
+        renderizarDashboard();
+    }
+}
+
+function refazerAcao() {
+    if (historicoRefazer.length === 0) return;
+
+    historicoDesfazer.push(JSON.stringify(dados));
+
+    const estadoFuturo = historicoRefazer.pop();
+    Object.keys(dados).forEach(chave => delete dados[chave]);
+    Object.assign(dados, JSON.parse(estadoFuturo));
+    estadoAnteriorStr = estadoFuturo;
+
+    salvarDados(false);
+
+    const telaReembolsos = document.getElementById("tela-reembolsos");
+    if (telaReembolsos && !telaReembolsos.classList.contains("hidden")) {
+        renderizarTabelaReembolsos();
+    } else {
+        renderizarDashboard();
+    }
+}
+
+window.addEventListener("keydown", (e) => {
+    const comando = e.metaKey || e.ctrlKey;
+    if (!comando) return;
+
+    const tecla = e.key.toLowerCase();
+
+    // Desfazer: Cmd + Z ou Ctrl + Z
+    if (tecla === "z" && !e.shiftKey) {
+        const el = document.activeElement;
+        const emDigitacao = el && (el.tagName === "TEXTAREA" || (el.tagName === "INPUT" && !["checkbox", "radio", "button", "submit"].includes(el.type)));
+        if (emDigitacao) return;
+
+        e.preventDefault();
+        desfazerAcao();
+    }
+    // Refazer: Cmd + Shift + Z, Ctrl + Shift + Z ou Ctrl + Y
+    else if ((tecla === "z" && e.shiftKey) || (tecla === "y" && !e.shiftKey)) {
+        const el = document.activeElement;
+        const emDigitacao = el && (el.tagName === "TEXTAREA" || (el.tagName === "INPUT" && !["checkbox", "radio", "button", "submit"].includes(el.type)));
+        if (emDigitacao) return;
+
+        e.preventDefault();
+        refazerAcao();
+    }
+});

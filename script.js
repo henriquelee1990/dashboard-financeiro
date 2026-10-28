@@ -527,7 +527,7 @@ function atualizarGrafico() {
             histDespesas.push(dTot);
         });
 
-      if (chartHistoricoInstancia) chartHistoricoInstancia.destroy();
+        if (chartHistoricoInstancia) chartHistoricoInstancia.destroy();
 
         const tamFonte = Number(document.getElementById("font-slider")?.value || 16);
 
@@ -609,6 +609,7 @@ function atualizarGrafico() {
             });
         }
     }
+}
 }// 6. Janelas Modais (Novo Mês e Emojis)
 function configurarModais() {
     document.getElementById("btn-add-categoria").onclick = () => {

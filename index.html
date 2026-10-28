@@ -52,15 +52,33 @@
                 <select id="seletor-mes" aria-label="Selecione o mês"></select>
               <button id="btn-novo-mes" class="btn-secundario">+ Novo Mês</button>
               <button id="btn-excluir-mes" class="btn-secundario">🗑️ Excluir Mês</button>
-<button id="btn-status-contas" class="btn-secundario">📊 Status das Contas</button>            </div>
+<button id="btn-status-contas" class="btn-secundario">📊 Status das Contas</button>
+              <button id="btn-reembolsos" class="btn-secundario">🩺 Reembolsos</button>
+            </div>
             <div class="saldo-geral">
                 <span>Saldo Geral:</span>
                 <strong id="saldo-valor">R$ 0,00</strong>
             </div>
         </section>
 
-        <!-- Grade de Caixas (Entradas e Categorias) -->
+<!-- Grade de Caixas (Entradas e Categorias) -->
         <main id="cards-container" class="cards-grid"></main>
+
+        <!-- Tela de Reembolsos (Oculta por padrão) -->
+        <section id="tela-reembolsos" class="hidden">
+            <div class="card-categoria" style="max-width: 100%; margin-bottom: 24px;">
+                <div class="card-cabecalho" style="justify-content: space-between;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <span class="btn-emoji" style="cursor: default;">🩺</span>
+                        <h2 style="font-size: 1.2em; margin: 0;">Controle de Reembolsos</h2>
+                    </div>
+                    <button id="btn-voltar-dashboard" class="btn-secundario">⬅ Voltar</button>
+                </div>
+                <div class="tabela-responsiva">
+                    <!-- A tabela será injetada aqui pelo JS -->
+                </div>
+            </div>
+        </section>
 
         <!-- Adicionar Categoria -->
         <div class="area-add-categoria">

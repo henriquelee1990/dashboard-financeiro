@@ -134,7 +134,18 @@ function configurarVoz() {
 
         const locucao = new SpeechSynthesisUtterance(mensagem);
         locucao.lang = "pt-BR";
-        locucao.rate = 1.0;
+        locucao.rate = 1.05;
+        locucao.pitch = 1.0;
+
+        const vozesDisponiveis = window.speechSynthesis.getVoices();
+        const melhorVoz = vozesDisponiveis.find(v => 
+            (v.lang === "pt-BR" || v.lang === "pt_BR") && 
+            (v.name.includes("Google") || v.name.includes("Natural") || v.name.includes("Luciana") || v.name.includes("Felipe") || v.name.includes("Francisca"))
+        ) || vozesDisponiveis.find(v => v.lang === "pt-BR" || v.lang === "pt_BR" || v.lang.startsWith("pt"));
+
+        if (melhorVoz) {
+            locucao.voice = melhorVoz;
+        }
 
         locucao.onend = () => {
             vozFalando = false;

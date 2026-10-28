@@ -307,7 +307,10 @@ const inputValor = document.createElement("input");
     const btnRemover = document.createElement("button");
     btnRemover.className = "btn-remover-item";
     btnRemover.innerHTML = "×";
-    btnRemover.onclick = () => {
+  btnRemover.onclick = () => {
+        const confirmar = confirm(`Deseja realmente remover o item "${item.nome || 'sem nome'}"?`);
+        if (!confirmar) return;
+
         const mesAtual = dados.meses[dados.mesAtivo];
         if (tipo === "entrada") {
             mesAtual.entradas.splice(idx, 1);

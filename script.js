@@ -224,9 +224,13 @@ function renderizarDashboard() {
     container.appendChild(cardEntradas);
 
    const listaEntradas = cardEntradas.querySelector("#lista-entradas");
-    mesAtual.entradas.sort((a, b) => Number(b.valor || 0) - Number(a.valor || 0));
-    mesAtual.entradas.forEach((item, idx) => {
-        listaEntradas.appendChild(criarLinhaItem(item, idx, "entrada"));
+   mesAtual.entradas.sort((a, b) => {
+        const va = Number(a.valor || 0);
+        const vb = Number(b.valor || 0);
+        if (va >= 0 && vb < 0) return -1;
+        if (va < 0 && vb >= 0) return 1;
+        if (va >= 0 && vb >= 0) return vb - va;
+        return va - vb;
     });
 
     cardEntradas.querySelector("#btn-add-entrada").onclick = () => {

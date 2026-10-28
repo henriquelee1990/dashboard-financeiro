@@ -46,7 +46,8 @@
             <div class="controle-mes">
                 <select id="seletor-mes" aria-label="Selecione o mês"></select>
               <button id="btn-novo-mes" class="btn-secundario">+ Novo Mês</button>
-                <button id="btn-excluir-mes" class="btn-secundario">🗑️ Excluir Mês</button>
+              <button id="btn-excluir-mes" class="btn-secundario">🗑️ Excluir Mês</button>
+                <button id="btn-a-pagar" class="btn-secundario">📋 A Pagar</button>
             </div>
             <div class="saldo-geral">
                 <span>Saldo Geral:</span>
@@ -101,7 +102,20 @@
             </div>
         </div>
     </div>
-
+<!-- Modal A Pagar -->
+    <div id="modal-a-pagar" class="modal-overlay hidden">
+        <div class="modal-caixa modal-a-pagar-caixa">
+            <div class="modal-a-pagar-topo">
+                <h3>Contas a Pagar</h3>
+                <span id="total-a-pagar-modal" class="total-destaque">R$ 0</span>
+            </div>
+            <p>Pendências não pagas (interruptor desligado) neste mês:</p>
+            <div id="lista-a-pagar" class="lista-pendencias"></div>
+            <div class="modal-acoes">
+                <button id="modal-a-pagar-fechar" class="btn-secundario">Fechar</button>
+            </div>
+        </div>
+    </div>
     <script src="script.js"></script>
 </body>
 </html>

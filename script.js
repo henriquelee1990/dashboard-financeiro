@@ -331,23 +331,38 @@ const inputValor = document.createElement("input");
     };
     inputValor.onkeydown = (e) => { if (e.key === "Enter") inputValor.blur(); };
 
-    const switchLabel = document.createElement("label");
+   const switchLabel = document.createElement("label");
     switchLabel.className = "switch";
-    switchLabel.innerHTML = `
-        <input type="checkbox" ${item.pago ? "checked" : ""}>
-        <span class="slider"></span>
-    `;
+    
+    // Suporte aos estados: 0 = aberto, 1 = caixinha, 2 = pago (compatível com true/false antigos)
+    let estadoAtual = item.estado !== undefined ? item.estado : (item.pago ? 2 : 0);
+    aplicarClasseEstado(switchLabel, inputNome, linha, estadoAtual);
 
-    const checkbox = switchLabel.querySelector("input");
-    checkbox.onchange = () => {
-        item.pago = checkbox.checked;
-        if (item.pago) {
-            inputNome.classList.add("pago");
-        } else {
-            inputNome.classList.remove("pago");
-        }
+    switchLabel.onclick = (e) => {
+        e.preventDefault();
+        // Ciclo: 0 (Aberto) -> 1 (Caixinha) -> 2 (Pago) -> 0 (Aberto)
+        estadoAtual = (estadoAtual + 1) % 3;
+        item.estado = estadoAtual;
+        item.pago = (estadoAtual === 2); // Mantém compatibilidade com cálculos existentes
+        
+        aplicarClasseEstado(switchLabel, inputNome, linha, estadoAtual);
         salvarDados();
+        renderizarDashboard();
     };
+
+    function aplicarClasseEstado(labelEl, nomeEl, linhaEl, est) {
+        labelEl.classList.remove("caixinha", "pago");
+        linhaEl.classList.remove("caixinha");
+        nomeEl.classList.remove("pago");
+
+        if (est === 1) {
+            labelEl.classList.add("caixinha");
+            linhaEl.classList.add("caixinha");
+        } else if (est === 2) {
+            labelEl.classList.add("pago");
+            nomeEl.classList.add("pago");
+        }
+    }
 
     const btnRemover = document.createElement("button");
     btnRemover.className = "btn-remover-item";

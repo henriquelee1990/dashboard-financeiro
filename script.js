@@ -269,7 +269,7 @@ function criarLinhaItem(item, idx, tipo, catIdx = null) {
         salvarDados();
     };
 
-const inputValor = document.createElement("input");
+    const inputValor = document.createElement("input");
     inputValor.className = "item-valor";
     inputValor.type = "text";
     inputValor.value = formatarMoeda(item.valor);
@@ -374,6 +374,16 @@ function atualizarGrafico() {
 
 // 6. Janelas Modais (Novo Mês e Emojis)
 function configurarModais() {
+    const modalMes = document.getElementById("modal-novo-mes");
+    const modalEmoji = document.getElementById("modal-emoji");
+    const inputNomeMes = document.getElementById("input-nome-mes");
+    const gridEmoji = document.getElementById("emoji-grid");
+
+    const fecharTodosModais = () => {
+        modalMes.classList.add("hidden");
+        modalEmoji.classList.add("hidden");
+    };
+
     document.getElementById("btn-add-categoria").onclick = () => {
         dados.meses[dados.mesAtivo].categorias.push({
             emoji: "📦",
@@ -384,11 +394,9 @@ function configurarModais() {
         renderizarDashboard();
     };
 
-    const modalMes = document.getElementById("modal-novo-mes");
-    const inputNomeMes = document.getElementById("input-nome-mes");
-
     document.getElementById("btn-novo-mes").onclick = () => {
         inputNomeMes.value = "";
+        modalEmoji.classList.add("hidden");
         modalMes.classList.remove("hidden");
         inputNomeMes.focus();
     };
@@ -418,9 +426,6 @@ function configurarModais() {
         modalMes.classList.add("hidden");
     };
 
-    const modalEmoji = document.getElementById("modal-emoji");
-    const gridEmoji = document.getElementById("emoji-grid");
-
     EMOJIS_DISPONIVEIS.forEach(emoji => {
         const el = document.createElement("div");
         el.className = "emoji-item";
@@ -439,11 +444,22 @@ function configurarModais() {
     document.getElementById("modal-emoji-fechar").onclick = () => {
         modalEmoji.classList.add("hidden");
     };
+
+    modalMes.addEventListener("click", (event) => {
+        if (event.target === modalMes) fecharTodosModais();
+    });
+
+    modalEmoji.addEventListener("click", (event) => {
+        if (event.target === modalEmoji) fecharTodosModais();
+    });
 }
 
 function abrirModalEmoji(catIdx) {
     categoriaEditandoEmoji = catIdx;
-    document.getElementById("modal-emoji").classList.remove("hidden");
+    const modalMes = document.getElementById("modal-novo-mes");
+    const modalEmoji = document.getElementById("modal-emoji");
+    modalMes.classList.add("hidden");
+    modalEmoji.classList.remove("hidden");
 }
 
 // 7. Backup e Restauração de Dados

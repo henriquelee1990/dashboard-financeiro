@@ -381,7 +381,77 @@ body {
     flex-shrink: 0;
     padding: 0 4px;
 }
+/* Interruptor em Bold (3 Estados com Alto Contraste) */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 62px;
+    height: 30px;
+    flex-shrink: 0;
+    cursor: pointer;
+}
 
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #e2e8f0;
+    border: 3px solid #475569;
+    border-radius: 30px;
+    transition: 0.25s;
+    box-sizing: border-box;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 20px;
+    width: 20px;
+    left: 2px;
+    bottom: 2px;
+    background-color: #475569;
+    border-radius: 50%;
+    transition: 0.25s;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+}
+
+/* Estado 1: Na Caixinha (Bolinha roxa vibrante no centro) */
+.switch.caixinha .slider {
+    background-color: #f3e8ff;
+    border-color: #6b21a8;
+}
+
+.switch.caixinha .slider:before {
+    transform: translateX(16px);
+    background-color: #8a05be;
+}
+
+/* Estado 2: Pago (Verde vivo com contorno escuro) */
+.switch.pago .slider {
+    background-color: #dcfce7;
+    border-color: #15803d;
+}
+
+.switch.pago .slider:before {
+    transform: translateX(32px);
+    background-color: #16a34a;
+}
+
+/* Realce na linha da despesa guardada */
+.item-linha.caixinha {
+    background-color: rgba(138, 5, 190, 0.08);
+    border-left: 4px solid #8a05be;
+    border-radius: 4px;
+}
 
 .btn-add-item {
     width: 100%;

@@ -394,10 +394,27 @@ function configurarModais() {
     const modalMes = document.getElementById("modal-novo-mes");
     const inputNomeMes = document.getElementById("input-nome-mes");
 
-    document.getElementById("btn-novo-mes").onclick = () => {
+   document.getElementById("btn-novo-mes").onclick = () => {
         inputNomeMes.value = "";
         modalMes.classList.remove("hidden");
         inputNomeMes.focus();
+    };
+
+    document.getElementById("btn-excluir-mes").onclick = () => {
+        const meses = Object.keys(dados.meses);
+        if (meses.length <= 1) {
+            alert("Não é possível excluir o único mês existente.");
+            return;
+        }
+
+        const confirmar = confirm(`Tem certeza que deseja excluir o mês "${dados.mesAtivo}" e todos os seus lançamentos?`);
+        if (confirmar) {
+            delete dados.meses[dados.mesAtivo];
+            dados.mesAtivo = Object.keys(dados.meses)[0];
+            salvarDados();
+            atualizarSeletorMeses();
+            renderizarDashboard();
+        }
     };
 
     document.getElementById("modal-cancelar").onclick = () => {

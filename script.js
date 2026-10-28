@@ -401,62 +401,197 @@ const inputValor = document.createElement("input");
     return linha;
 }
 
-// 5. Gráfico de Rosca com %
+// 5. Central Analítica (KPIs, Rosca, Histórico e Top 5)
 function atualizarGrafico() {
-    const ctx = document.getElementById("grafico-despesas").getContext("2d");
     const mesAtual = dados.meses[dados.mesAtivo];
+    if (!mesAtual) return;
 
-    const labels = [];
-    const valores = [];
-    let total = 0;
+    // Totais gerais do mês ativo
+    const totalEntradas = mesAtual.entradas.reduce((acc, cur) => acc + Number(cur.valor || 0), 0);
+    let totalDespesas = 0;
+    const todosItens = [];
 
     mesAtual.categorias.forEach(cat => {
-        const subtotal = cat.itens.reduce((acc, cur) => acc + Number(cur.valor || 0), 0);
-        if (subtotal > 0) {
-            labels.push(cat.nome);
-            valores.push(subtotal);
-            total += subtotal;
+        cat.itens.forEach(item => {
+            const v = Number(item.valor || 0);
+            totalDespesas += v;
+            if (v > 0) {
+                todosItens.push({
+                    nome: item.nome || "Sem nome",
+                    valor: v,
+                    categoria: cat.nome,
+                    emoji: cat.emoji
+                });
+            }
+        });
+    });
+
+    const saldo = totalEntradas - totalDespesas;
+
+    // 1. Atualização dos Cards de KPIs
+    const kpiPoupanca = document.getElementById("kpi-poupanca");
+    const kpiPoupancaSub = document.getElementById("kpi-poupanca-sub");
+    const kpiComprometimento = document.getElementById("kpi-comprometimento");
+    const kpiComprometimentoSub = document.getElementById("kpi-comprometimento-sub");
+    const kpiDiario = document.getElementById("kpi-diario");
+
+    if (kpiPoupanca && kpiComprometimento && kpiDiario) {
+        const taxaPoupanca = totalEntradas > 0 ? Math.round((saldo / totalEntradas) * 100) : 0;
+        kpiPoupanca.textContent = `${taxaPoupanca}%`;
+        kpiPoupanca.style.color = saldo < 0 ? "var(--perigo)" : "var(--primaria)";
+        if (kpiPoupancaSub) {
+            kpiPoupancaSub.textContent = saldo < 0 ? `Déficit de ${formatarMoeda(Math.abs(saldo))}` : `${formatarMoeda(saldo)} disponíveis`;
         }
-    });
 
-    const labelsComPorcentagem = labels.map((nome, i) => {
-        const perc = total > 0 ? ((valores[i] / total) * 100).toFixed(1) : 0;
-        return `${nome} (${perc}%)`;
-    });
+        const taxaComp = totalEntradas > 0 ? Math.round((totalDespesas / totalEntradas) * 100) : (totalDespesas > 0 ? 100 : 0);
+        kpiComprometimento.textContent = `${taxaComp}%`;
+        kpiComprometimento.style.color = taxaComp > 100 ? "var(--perigo)" : (taxaComp > 75 ? "#e67e22" : "var(--primaria)");
+        if (kpiComprometimentoSub) {
+            kpiComprometimentoSub.textContent = `${formatarMoeda(totalDespesas)} gastos no total`;
+        }
 
-    if (chartInstancia) chartInstancia.destroy();
+        const mediaDiaria = Math.round(totalDespesas / 30);
+        kpiDiario.textContent = formatarMoeda(mediaDiaria);
+    }
 
-    chartInstancia = new Chart(ctx, {
-        type: "doughnut",
-        data: {
-            labels: labelsComPorcentagem,
-            datasets: [{
-                data: valores,
-                backgroundColor: [
-                    "#27ae60", "#2980b9", "#8e44ad", "#e67e22", "#e74c3c",
-                    "#16a085", "#f39c12", "#d35400", "#2c3e50", "#7f8c8d"
-                ],
-                borderWidth: 2
-            }]
-        },
-options: {
-            responsive: true,
-            plugins: {
-                legend: {
-                    position: window.innerWidth >= 768 ? "right" : "bottom",
-                    labels: {
-                        boxWidth: Math.round(Number(document.getElementById("font-slider")?.value || 16) * 0.9),
-                        padding: 12,
-                        font: {
-                            size: Number(document.getElementById("font-slider")?.value || 16)
+    // 2. Gráfico de Rosca (Categorias)
+    const canvasRosca = document.getElementById("grafico-despesas");
+    if (canvasRosca) {
+        const ctxRosca = canvasRosca.getContext("2d");
+        const labels = [];
+        const valores = [];
+
+        mesAtual.categorias.forEach(cat => {
+            const subtotal = cat.itens.reduce((acc, cur) => acc + Number(cur.valor || 0), 0);
+            if (subtotal > 0) {
+                labels.push(cat.nome);
+                valores.push(subtotal);
+            }
+        });
+
+        const labelsComPorcentagem = labels.map((nome, i) => {
+            const perc = totalDespesas > 0 ? ((valores[i] / totalDespesas) * 100).toFixed(1) : 0;
+            return `${nome} (${perc}%)`;
+        });
+
+        if (chartInstancia) chartInstancia.destroy();
+
+        chartInstancia = new Chart(ctxRosca, {
+            type: "doughnut",
+            data: {
+                labels: labelsComPorcentagem,
+                datasets: [{
+                    data: valores,
+                    backgroundColor: [
+                        "#27ae60", "#2980b9", "#8e44ad", "#e67e22", "#e74c3c",
+                        "#16a085", "#f39c12", "#d35400", "#2c3e50", "#7f8c8d"
+                    ],
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: window.innerWidth >= 768 ? "right" : "bottom",
+                        labels: {
+                            boxWidth: Math.round(Number(document.getElementById("font-slider")?.value || 16) * 0.9),
+                            padding: 10,
+                            font: {
+                                size: Number(document.getElementById("font-slider")?.value || 16)
+                            }
                         }
                     }
                 }
             }
+        });
+    }
+
+    // 3. Gráfico de Histórico Mensal (Entradas vs Despesas)
+    const canvasHistorico = document.getElementById("grafico-historico");
+    if (canvasHistorico) {
+        const ctxHist = canvasHistorico.getContext("2d");
+        const mesesLista = Object.keys(dados.meses);
+        const histEntradas = [];
+        const histDespesas = [];
+
+        mesesLista.forEach(nomeMes => {
+            const m = dados.meses[nomeMes];
+            const eTot = m.entradas.reduce((acc, cur) => acc + Number(cur.valor || 0), 0);
+            let dTot = 0;
+            m.categorias.forEach(cat => {
+                dTot += cat.itens.reduce((acc, cur) => acc + Number(cur.valor || 0), 0);
+            });
+            histEntradas.push(eTot);
+            histDespesas.push(dTot);
+        });
+
+        if (chartHistoricoInstancia) chartHistoricoInstancia.destroy();
+
+        chartHistoricoInstancia = new Chart(ctxHist, {
+            type: "bar",
+            data: {
+                labels: mesesLista,
+                datasets: [
+                    {
+                        label: "Entradas",
+                        data: histEntradas,
+                        backgroundColor: "#27ae60"
+                    },
+                    {
+                        label: "Despesas",
+                        data: histDespesas,
+                        backgroundColor: "#e74c3c"
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: "bottom"
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: (val) => "R$ " + Number(val).toLocaleString("pt-BR")
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // 4. Top 5 Maiores Despesas
+    const listaTop = document.getElementById("lista-top-despesas");
+    if (listaTop) {
+        listaTop.innerHTML = "";
+        todosItens.sort((a, b) => b.valor - a.valor);
+        const top5 = todosItens.slice(0, 5);
+
+        if (top5.length === 0) {
+            listaTop.innerHTML = `<div style="text-align: center; color: var(--texto-secundario); padding: 12px 0;">Nenhuma despesa lançada neste mês.</div>`;
+        } else {
+            top5.forEach(item => {
+                const perc = totalDespesas > 0 ? ((item.valor / totalDespesas) * 100).toFixed(0) : 0;
+                const el = document.createElement("div");
+                el.className = "top-despesa-item";
+                el.innerHTML = `
+                    <div class="top-despesa-info">
+                        <span>${item.emoji} ${item.nome} <span style="font-size: 0.85em; color: var(--texto-secundario); font-weight: normal;">(${item.categoria})</span></span>
+                        <span>${formatarMoeda(item.valor)} <span style="font-size: 0.85em; color: var(--texto-secundario); font-weight: normal;">(${perc}%)</span></span>
+                    </div>
+                    <div class="top-despesa-barra-fundo">
+                        <div class="top-despesa-barra-progresso" style="width: ${perc}%;"></div>
+                    </div>
+                `;
+                listaTop.appendChild(el);
+            });
         }
-});
-}
-// 6. Janelas Modais (Novo Mês e Emojis)
+    }
+}// 6. Janelas Modais (Novo Mês e Emojis)
 function configurarModais() {
     document.getElementById("btn-add-categoria").onclick = () => {
         dados.meses[dados.mesAtivo].categorias.push({

@@ -106,17 +106,21 @@
             </div>
         </div>
     </div>
-<!-- Modal A Pagar -->
-    <div id="modal-a-pagar" class="modal-overlay hidden">
-        <div class="modal-caixa modal-a-pagar-caixa">
-            <div class="modal-a-pagar-topo">
-                <h3>Contas a Pagar</h3>
-                <span id="total-a-pagar-modal" class="total-destaque">R$ 0</span>
+<!-- Modal Status das Contas -->
+    <div id="modal-status" class="modal-overlay hidden">
+        <div class="modal-caixa modal-status-caixa">
+            <div class="modal-status-topo">
+                <h3>Status das Contas</h3>
+                <span id="total-status-modal" class="total-destaque">R$ 0</span>
             </div>
-            <p>Pendências não pagas (interruptor desligado) neste mês:</p>
-            <div id="lista-a-pagar" class="lista-pendencias"></div>
+            <div class="abas-status" style="display: flex; gap: 8px; margin-bottom: 16px;">
+                <button class="btn-secundario aba-btn ativa" data-aba="0" style="flex: 1; padding: 6px;">📋 A Pagar</button>
+                <button class="btn-secundario aba-btn" data-aba="1" style="flex: 1; padding: 6px;">🟣 Caixinha</button>
+                <button class="btn-secundario aba-btn" data-aba="2" style="flex: 1; padding: 6px;">✅ Pagas</button>
+            </div>
+            <div id="lista-status" class="lista-pendencias"></div>
             <div class="modal-acoes">
-                <button id="modal-a-pagar-fechar" class="btn-secundario">Fechar</button>
+                <button id="modal-status-fechar" class="btn-secundario">Fechar</button>
             </div>
         </div>
     </div>

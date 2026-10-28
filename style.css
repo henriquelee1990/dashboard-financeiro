@@ -646,7 +646,7 @@ input:checked + .slider:before {
     }
     
     .grafico-secao {
-        max-width: 600px;
+        max-width: 900px;
         margin: 40px auto 24px auto;
     }
 }

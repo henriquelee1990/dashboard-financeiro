@@ -25,6 +25,11 @@ const DADOS_PADRAO = {
         }
     }
 };
+const EMOJIS_DISPONIVEIS = [
+    "🏠", "🛒", "🚗", "💊", "🎓", "🎉", "✈️", "💡",
+    "🛡️", "📦", "🍽️", "🏋️", "💻", "🐶", "👗", "📱",
+    "⛽", "🏥", "📚", "🎮", "🍿", "☕", "💈", "🎁"
+];
 const API_URL = "https://script.google.com/macros/s/AKfycbwUQx6xkPdU6nTyN2lFEPi3K0i9y8iG4aHczI6wauClMbCmvJN4daf0D6qX2ltbdE6a/exec";
 let dados = JSON.parse(JSON.stringify(DADOS_PADRAO));
 

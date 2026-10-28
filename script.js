@@ -551,6 +551,29 @@ function configurarModais() {
             abrirModalStatus(Number(e.target.getAttribute("data-aba")));
         };
     });
+    // Alternância de Tela: Dashboard vs Reembolsos
+    const btnReembolsos = document.getElementById("btn-reembolsos");
+    const btnVoltar = document.getElementById("btn-voltar-dashboard");
+    const telaReembolsos = document.getElementById("tela-reembolsos");
+    const cardsContainer = document.getElementById("cards-container");
+    const areaAddCategoria = document.querySelector(".area-add-categoria");
+    const graficoSecao = document.querySelector(".grafico-secao");
+
+    if (btnReembolsos && btnVoltar) {
+        btnReembolsos.onclick = () => {
+            cardsContainer.classList.add("hidden");
+            areaAddCategoria.classList.add("hidden");
+            graficoSecao.classList.add("hidden");
+            telaReembolsos.classList.remove("hidden");
+        };
+
+        btnVoltar.onclick = () => {
+            telaReembolsos.classList.add("hidden");
+            cardsContainer.classList.remove("hidden");
+            areaAddCategoria.classList.remove("hidden");
+            graficoSecao.classList.remove("hidden");
+        };
+    }
 }
 
 function abrirModalEmoji(catIdx) {

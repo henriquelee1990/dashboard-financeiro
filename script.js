@@ -500,13 +500,64 @@ function configurarModais() {
     document.getElementById("modal-emoji-fechar").onclick = () => {
         modalEmoji.classList.add("hidden");
     };
+    const modalAPagar = document.getElementById("modal-a-pagar");
+    document.getElementById("btn-a-pagar").onclick = () => abrirModalAPagar();
+    document.getElementById("modal-a-pagar-fechar").onclick = () => modalAPagar.classList.add("hidden");
 }
 
 function abrirModalEmoji(catIdx) {
     categoriaEditandoEmoji = catIdx;
     document.getElementById("modal-emoji").classList.remove("hidden");
 }
+function abrirModalAPagar() {
+    const modalAPagar = document.getElementById("modal-a-pagar");
+    const listaEl = document.getElementById("lista-a-pagar");
+    const totalEl = document.getElementById("total-a-pagar-modal");
+    listaEl.innerHTML = "";
 
+    const mesAtual = dados.meses[dados.mesAtivo];
+    const pendencias = [];
+    let totalPendente = 0;
+
+    mesAtual.categorias.forEach(cat => {
+        cat.itens.forEach(item => {
+            const val = Number(item.valor || 0);
+            if (!item.pago && val > 0) {
+                pendencias.push({
+                    emoji: cat.emoji,
+                    categoria: cat.nome,
+                    nome: item.nome || "Sem nome",
+                    valor: val
+                });
+                totalPendente += val;
+            }
+        });
+    });
+
+    totalEl.textContent = formatarMoeda(totalPendente);
+
+    if (pendencias.length === 0) {
+        listaEl.innerHTML = `<div class="lista-vazia">🎉 Nenhuma conta pendente para este mês!</div>`;
+    } else {
+        pendencias.forEach(p => {
+            const linha = document.createElement("div");
+            linha.className = "item-pendente";
+            linha.innerHTML = `
+                <div class="item-pendente-info">
+                    <span style="font-size: 1.3em;">${p.emoji}</span>
+                    <div style="min-width: 0;">
+                        <div class="item-pendente-nome">${p.nome}</div>
+                        <div class="item-pendente-cat">${p.categoria}</div>
+                    </div>
+                </div>
+                <span class="item-pendente-valor">${formatarMoeda(p.valor)}</span>
+            `;
+            listaEl.appendChild(linha);
+        });
+    }
+
+    modalAPagar.classList.remove("hidden");
+}
 // 7. Backup e Restauração de Dados
 function configurarBackup() {
     document.getElementById("btn-backup").onclick = () => {

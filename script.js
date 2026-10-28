@@ -526,7 +526,9 @@ function atualizarGrafico() {
             histDespesas.push(dTot);
         });
 
-        if (chartHistoricoInstancia) chartHistoricoInstancia.destroy();
+      if (chartHistoricoInstancia) chartHistoricoInstancia.destroy();
+
+        const tamFonte = Number(document.getElementById("font-slider")?.value || 16);
 
         chartHistoricoInstancia = new Chart(ctxHist, {
             type: "bar",
@@ -549,13 +551,28 @@ function atualizarGrafico() {
                 responsive: true,
                 plugins: {
                     legend: {
-                        position: "bottom"
+                        position: "bottom",
+                        labels: {
+                            font: {
+                                size: tamFonte
+                            }
+                        }
                     }
                 },
                 scales: {
+                    x: {
+                        ticks: {
+                            font: {
+                                size: Math.round(tamFonte * 0.85)
+                            }
+                        }
+                    },
                     y: {
                         beginAtZero: true,
                         ticks: {
+                            font: {
+                                size: Math.round(tamFonte * 0.85)
+                            },
                             callback: (val) => "R$ " + Number(val).toLocaleString("pt-BR")
                         }
                     }

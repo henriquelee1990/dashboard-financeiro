@@ -223,7 +223,8 @@ function renderizarDashboard() {
     `;
     container.appendChild(cardEntradas);
 
-    const listaEntradas = cardEntradas.querySelector("#lista-entradas");
+   const listaEntradas = cardEntradas.querySelector("#lista-entradas");
+    mesAtual.entradas.sort((a, b) => Number(b.valor || 0) - Number(a.valor || 0));
     mesAtual.entradas.forEach((item, idx) => {
         listaEntradas.appendChild(criarLinhaItem(item, idx, "entrada"));
     });

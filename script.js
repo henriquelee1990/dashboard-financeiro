@@ -178,7 +178,7 @@ function configurarVoz() {
         textoVoz.textContent = "Parar Áudio";
         window.speechSynthesis.speak(locucao);
     });
-}}
+}
 
 // 3. Gestão e Troca de Meses
 function atualizarSeletorMeses() {

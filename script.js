@@ -414,9 +414,9 @@ function atualizarGrafico() {
         options: {
             responsive: true,
             plugins: {
-                legend: {
-                    position: "bottom",
-                    labels: { boxWidth: 14 }
+legend: {
+                    position: window.innerWidth >= 768 ? "right" : "bottom",
+                    labels: { boxWidth: 14, padding: 12 }
                 }
             }
         }

@@ -307,9 +307,17 @@ const inputValor = document.createElement("input");
     inputValor.type = "text";
     inputValor.value = formatarMoeda(item.valor);
     inputValor.onfocus = () => { inputValor.value = item.valor || ""; };
+  inputValor.onfocus = () => {
+        inputValor.value = item.valor !== "" && item.valor !== undefined ? String(item.valor).replace(".", ",") : "";
+    };
     inputValor.onblur = () => {
-        let texto = inputValor.value.replace(/[^\d,-]/g, "").replace(",", ".");
-        item.valor = Math.round(parseFloat(texto) || 0);
+        let texto = inputValor.value.replace(/[^\d,.-]/g, "");
+        if (texto.includes(",") && texto.includes(".")) {
+            texto = texto.replace(/\./g, "").replace(",", ".");
+        } else if (texto.includes(",")) {
+            texto = texto.replace(",", ".");
+        }
+        item.valor = parseFloat(texto) || 0;
         salvarDados();
         renderizarDashboard();
     };

@@ -467,7 +467,7 @@ input:checked + .slider:before {
 
 .grafico-wrapper {
     position: relative;
-    max-width: 320px;
+    max-width: 760px;
     margin: 0 auto;
 }
 

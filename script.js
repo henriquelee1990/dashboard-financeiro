@@ -269,11 +269,11 @@ function renderizarDashboard() {
             atualizarGrafico();
         };
 
-        const listaItens = card.querySelector(`#lista-itens-${catIdx}`);
+       const listaItens = card.querySelector(`#lista-itens-${catIdx}`);
+        cat.itens.sort((a, b) => Number(b.valor || 0) - Number(a.valor || 0));
         cat.itens.forEach((item, itemIdx) => {
             listaItens.appendChild(criarLinhaItem(item, itemIdx, "despesa", catIdx));
         });
-
         card.querySelector(".btn-add-item").onclick = () => {
             cat.itens.push({ nome: "Nova Conta", valor: 0, pago: false });
             salvarDados();

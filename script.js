@@ -75,11 +75,7 @@ async function iniciarAplicacao() {
     renderizarDashboard();
 }
 
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", iniciarAplicacao);
-} else {
-    iniciarAplicacao();
-}
+iniciarAplicacao();
 
 // 1. Acessibilidade (Tamanho da Fonte e Temas)
 function configurarAcessibilidade() {

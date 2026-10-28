@@ -427,7 +427,8 @@ options: {
                 }
             }
         }
-    });
+});
+}
 // 6. Janelas Modais (Novo Mês e Emojis)
 function configurarModais() {
     document.getElementById("btn-add-categoria").onclick = () => {

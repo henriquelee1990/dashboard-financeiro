@@ -87,12 +87,12 @@
 
 <!-- Central Analítica & Tomada de Decisão -->
         <section class="analise-secao">
-            <!-- 1. Indicadores Chave (KPIs) -->
+    <!-- 1. Indicadores Chave (KPIs) -->
             <div class="kpis-grid">
                 <div class="kpi-card">
-                    <span class="kpi-label">Taxa de Poupança</span>
-                    <strong class="kpi-valor" id="kpi-poupanca">0%</strong>
-                    <span class="kpi-sub" id="kpi-poupanca-sub">Guardado / Investido</span>
+                    <span class="kpi-label">Consegui investir</span>
+                    <strong class="kpi-valor" id="kpi-poupanca">R$ 0</strong>
+                    <span class="kpi-sub" id="kpi-poupanca-sub">0% da renda</span>
                 </div>
                 <div class="kpi-card">
                     <span class="kpi-label">Comprometimento da Renda</span>
@@ -106,7 +106,7 @@
                 </div>
             </div>
 
-            <!-- 2. Gráficos Comparativos (Rosca + Histórico Mensal) -->
+            <!-- 2. Gráficos Comparativos (Rosca, Histórico Geral e Investimentos) -->
             <div class="graficos-grid">
                 <div class="grafico-box">
                     <h3>Distribuição de Gastos</h3>
@@ -118,6 +118,12 @@
                     <h3>Evolução: Entradas vs Despesas</h3>
                     <div class="grafico-wrapper">
                         <canvas id="grafico-historico"></canvas>
+                    </div>
+                </div>
+                <div class="grafico-box">
+                    <h3>Evolução dos Investimentos</h3>
+                    <div class="grafico-wrapper">
+                        <canvas id="grafico-investimentos"></canvas>
                     </div>
                 </div>
             </div>

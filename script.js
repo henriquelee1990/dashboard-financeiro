@@ -113,6 +113,24 @@ function configurarVoz() {
     const iconeVoz = document.getElementById("icone-voz");
     const textoVoz = document.getElementById("texto-voz");
 
+    let vozes = [];
+    const carregarVozes = () => {
+        vozes = window.speechSynthesis.getVoices();
+    };
+    carregarVozes();
+    if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = carregarVozes;
+    }
+
+    const formatarParaVoz = (val) => {
+        const num = Number(val || 0);
+        const inteiros = Math.floor(Math.abs(num));
+        const centavos = Math.round((Math.abs(num) - inteiros) * 100);
+        let texto = `${inteiros.toLocaleString("pt-BR")} reais`;
+        if (centavos > 0) texto += ` e ${centavos} centavos`;
+        return num < 0 ? `menos ${texto}` : texto;
+    };
+
     btnVoz.addEventListener("click", () => {
         if (vozFalando) {
             window.speechSynthesis.cancel();
@@ -130,18 +148,19 @@ function configurarVoz() {
         });
         const saldo = totalEntradas - totalDespesas;
 
-        const mensagem = `Resumo de ${dados.mesAtivo}. Total de entradas: ${formatarMoeda(totalEntradas)}. Total de despesas: ${formatarMoeda(totalDespesas)}. Saldo disponível: ${formatarMoeda(saldo)}.`;
+        const mensagem = `Resumo de ${dados.mesAtivo}. Total de entradas: ${formatarParaVoz(totalEntradas)}. Total de despesas: ${formatarParaVoz(totalDespesas)}. Saldo disponível: ${formatarParaVoz(saldo)}.`;
 
         const locucao = new SpeechSynthesisUtterance(mensagem);
         locucao.lang = "pt-BR";
         locucao.rate = 1.05;
         locucao.pitch = 1.0;
 
-        const vozesDisponiveis = window.speechSynthesis.getVoices();
-        const melhorVoz = vozesDisponiveis.find(v => 
-            (v.lang === "pt-BR" || v.lang === "pt_BR") && 
-            (v.name.includes("Google") || v.name.includes("Natural") || v.name.includes("Luciana") || v.name.includes("Felipe") || v.name.includes("Francisca"))
-        ) || vozesDisponiveis.find(v => v.lang === "pt-BR" || v.lang === "pt_BR" || v.lang.startsWith("pt"));
+        if (vozes.length === 0) vozes = window.speechSynthesis.getVoices();
+
+        const melhorVoz = vozes.find(v => (v.lang === "pt-BR" || v.lang === "pt_BR") && v.name.includes("Google")) ||
+                          vozes.find(v => (v.lang === "pt-BR" || v.lang === "pt_BR") && (v.name.includes("Natural") || v.name.includes("Enhanced") || v.name.includes("Aprimorada") || v.name.includes("Siri"))) ||
+                          vozes.find(v => (v.lang === "pt-BR" || v.lang === "pt_BR") && !v.name.toLowerCase().includes("compact")) ||
+                          vozes.find(v => v.lang === "pt-BR" || v.lang === "pt_BR");
 
         if (melhorVoz) {
             locucao.voice = melhorVoz;
@@ -159,7 +178,7 @@ function configurarVoz() {
         textoVoz.textContent = "Parar Áudio";
         window.speechSynthesis.speak(locucao);
     });
-}
+}}
 
 // 3. Gestão e Troca de Meses
 function atualizarSeletorMeses() {

@@ -296,9 +296,13 @@ function renderizarDashboard() {
         saldoFixa.style.color = saldo < 0 ? "var(--perigo)" : "var(--primaria)";
     }
 
-    const percGasto = totalEntradas > 0 ? Math.min(Math.round((totalDespesas / totalEntradas) * 100), 100) : 0;
-    document.getElementById("termometro-progresso").style.width = `${percGasto}%`;
-    document.getElementById("termometro-texto").textContent = `${percGasto}% da renda gasta`;
+const percReal = totalEntradas > 0 ? Math.round((totalDespesas / totalEntradas) * 100) : (totalDespesas > 0 ? 100 : 0);
+    const barraProgresso = document.getElementById("termometro-progresso");
+    
+    barraProgresso.style.width = `${Math.min(percReal, 100)}%`;
+    barraProgresso.style.backgroundColor = percReal > 100 ? "var(--perigo)" : "var(--primaria)";
+    
+    document.getElementById("termometro-texto").textContent = `${percReal}% da renda gasta`;
 
     atualizarGrafico();
 }

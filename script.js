@@ -289,6 +289,12 @@ function renderizarDashboard() {
     const saldoEl = document.getElementById("saldo-valor");
     saldoEl.textContent = formatarMoeda(saldo);
     saldoEl.style.color = saldo < 0 ? "var(--perigo)" : "var(--primaria)";
+    const saldoFixa = document.getElementById("barra-fixa-saldo");
+    if (saldoFixa) {
+        document.getElementById("barra-fixa-mes").textContent = dados.mesAtivo;
+        saldoFixa.textContent = formatarMoeda(saldo);
+        saldoFixa.style.color = saldo < 0 ? "var(--perigo)" : "var(--primaria)";
+    }
 
     const percGasto = totalEntradas > 0 ? Math.min(Math.round((totalDespesas / totalEntradas) * 100), 100) : 0;
     document.getElementById("termometro-progresso").style.width = `${percGasto}%`;
@@ -619,3 +625,14 @@ function configurarBackup() {
         reader.readAsText(file);
     };
 }
+// 8. Barra Fixa Inteligente (Scroll)
+window.addEventListener("scroll", () => {
+    const barraFixa = document.getElementById("barra-fixa");
+    if (barraFixa) {
+        if (window.scrollY > 250) {
+            barraFixa.classList.add("visivel");
+        } else {
+            barraFixa.classList.remove("visivel");
+        }
+    }
+});

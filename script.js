@@ -536,9 +536,21 @@ function configurarModais() {
     document.getElementById("modal-emoji-fechar").onclick = () => {
         modalEmoji.classList.add("hidden");
     };
-    const modalAPagar = document.getElementById("modal-a-pagar");
-    document.getElementById("btn-a-pagar").onclick = () => abrirModalAPagar();
-    document.getElementById("modal-a-pagar-fechar").onclick = () => modalAPagar.classList.add("hidden");
+  const modalStatus = document.getElementById("modal-status");
+    document.getElementById("btn-status-contas").onclick = () => {
+        document.querySelectorAll(".aba-btn").forEach(b => b.classList.remove("ativa"));
+        document.querySelector('.aba-btn[data-aba="0"]').classList.add("ativa");
+        abrirModalStatus(0);
+    };
+    document.getElementById("modal-status-fechar").onclick = () => modalStatus.classList.add("hidden");
+
+    document.querySelectorAll(".aba-btn").forEach(btn => {
+        btn.onclick = (e) => {
+            document.querySelectorAll(".aba-btn").forEach(b => b.classList.remove("ativa"));
+            e.target.classList.add("ativa");
+            abrirModalStatus(Number(e.target.getAttribute("data-aba")));
+        };
+    });
 }
 
 function abrirModalEmoji(catIdx) {

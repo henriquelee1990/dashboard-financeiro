@@ -696,8 +696,7 @@ function configurarModais() {
     const telaReembolsos = document.getElementById("tela-reembolsos");
     const cardsContainer = document.getElementById("cards-container");
     const areaAddCategoria = document.querySelector(".area-add-categoria");
-    const graficoSecao = document.querySelector(".grafico-secao");
-
+const graficoSecao = document.querySelector(".analise-secao") || document.querySelector(".grafico-secao");
     if (btnReembolsos && btnVoltar) {
         btnReembolsos.onclick = () => {
             cardsContainer.classList.add("hidden");

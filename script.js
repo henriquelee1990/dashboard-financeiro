@@ -456,19 +456,18 @@ function atualizarGrafico() {
     const kpiComprometimentoSub = document.getElementById("kpi-comprometimento-sub");
     const kpiDiario = document.getElementById("kpi-diario");
 
-    if (kpiPoupanca && kpiComprometimento && kpiDiario) {
-        const taxaPoupanca = totalEntradas > 0 ? Math.round((saldo / totalEntradas) * 100) : 0;
-        kpiPoupanca.textContent = `${taxaPoupanca}%`;
-        kpiPoupanca.style.color = saldo < 0 ? "var(--perigo)" : "var(--primaria)";
-        if (kpiPoupancaSub) {
-            kpiPoupancaSub.textContent = saldo < 0 ? `Déficit de ${formatarMoeda(Math.abs(saldo))}` : `${formatarMoeda(saldo)} disponíveis`;
-        }
+   let totalInvestido = 0;
+        mesAtual.categorias.forEach(cat => {
+            if (cat.nome.toLowerCase().includes("investimento")) {
+                totalInvestido += cat.itens.reduce((acc, cur) => acc + Number(cur.valor || 0), 0);
+            }
+        });
 
-        const taxaComp = totalEntradas > 0 ? Math.round((totalDespesas / totalEntradas) * 100) : (totalDespesas > 0 ? 100 : 0);
-        kpiComprometimento.textContent = `${taxaComp}%`;
-        kpiComprometimento.style.color = taxaComp > 100 ? "var(--perigo)" : (taxaComp > 75 ? "#e67e22" : "var(--primaria)");
-        if (kpiComprometimentoSub) {
-            kpiComprometimentoSub.textContent = `${formatarMoeda(totalDespesas)} gastos no total`;
+        const taxaPoupanca = totalEntradas > 0 ? Math.round((totalInvestido / totalEntradas) * 100) : 0;
+        kpiPoupanca.textContent = `${taxaPoupanca}%`;
+        kpiPoupanca.style.color = taxaPoupanca > 0 ? "var(--primaria)" : "var(--texto-secundario)";
+        if (kpiPoupancaSub) {
+            kpiPoupancaSub.textContent = `${formatarMoeda(totalInvestido)} alocados`;
         }
 
         const mediaDiaria = Math.round(totalDespesas / 30);

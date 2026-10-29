@@ -455,7 +455,7 @@ function atualizarGrafico() {
     const kpiComprometimento = document.getElementById("kpi-comprometimento");
     const kpiComprometimentoSub = document.getElementById("kpi-comprometimento-sub");
     const kpiDiario = document.getElementById("kpi-diario");
-
+if (kpiPoupanca && kpiComprometimento && kpiDiario) {
    let totalInvestido = 0;
         mesAtual.categorias.forEach(cat => {
             if (cat.nome.toLowerCase().includes("investimento")) {

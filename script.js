@@ -600,23 +600,28 @@ if (kpiPoupanca && kpiComprometimento && kpiDiario) {
             }
         });
     }
-// 3.5 Gráfico de Evolução dos Investimentos (Saldo/Poupança mensal)
+// 3.5 Gráfico de Evolução dos Investimentos (Valor e Percentual)
     const canvasInvestimentos = document.getElementById("grafico-investimentos");
     if (canvasInvestimentos) {
         const ctxInv = canvasInvestimentos.getContext("2d");
         const mesesLista = Object.keys(dados.meses);
         const histInvestimentos = [];
+        const histPercentual = [];
 
         mesesLista.forEach(nomeMes => {
             const m = dados.meses[nomeMes];
             const eTot = m.entradas.reduce((acc, cur) => acc + Number(cur.valor || 0), 0);
-            let dTot = 0;
+            
+            let invTot = 0;
             m.categorias.forEach(cat => {
-                dTot += cat.itens.reduce((acc, cur) => acc + Number(cur.valor || 0), 0);
+                if (cat.nome.toLowerCase().includes("investimento")) {
+                    invTot += cat.itens.reduce((acc, cur) => acc + Number(cur.valor || 0), 0);
+                }
             });
-            const saldoMes = eTot - dTot;
-            // Consideramos como investimento o que sobra no mês. Se ficou negativo, cai para 0.
-            histInvestimentos.push(saldoMes > 0 ? saldoMes : 0); 
+            
+            histInvestimentos.push(invTot);
+            const perc = eTot > 0 ? Math.round((invTot / eTot) * 100) : 0;
+            histPercentual.push(perc);
         });
 
         if (chartInvestimentosInstancia) chartInvestimentosInstancia.destroy();
@@ -627,45 +632,63 @@ if (kpiPoupanca && kpiComprometimento && kpiDiario) {
             type: "line",
             data: {
                 labels: mesesLista,
-                datasets: [{
-                    label: "Valor Investido / Poupado",
-                    data: histInvestimentos,
-                    borderColor: "#8e44ad", // Cor roxa para combinar com a identidade visual da caixinha
-                    backgroundColor: "rgba(142, 68, 173, 0.2)",
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.3,
-                    pointBackgroundColor: "#8e44ad"
-                }]
+                datasets: [
+                    {
+                        type: "line",
+                        label: "Valor Investido",
+                        data: histInvestimentos,
+                        borderColor: "#8e44ad",
+                        backgroundColor: "#8e44ad",
+                        borderWidth: 2,
+                        tension: 0.3,
+                        yAxisID: "y"
+                    },
+                    {
+                        type: "bar",
+                        label: "Percentual da Renda",
+                        data: histPercentual,
+                        backgroundColor: "rgba(142, 68, 173, 0.3)",
+                        yAxisID: "y1"
+                    }
+                ]
             },
             options: {
                 responsive: true,
                 plugins: {
                     legend: {
                         position: "bottom",
-                        labels: {
-                            font: { size: tamFonte }
-                        }
+                        labels: { font: { size: tamFonte } }
                     }
                 },
                 scales: {
                     x: {
-                        ticks: {
-                            font: { size: Math.round(tamFonte * 0.85) }
-                        }
+                        ticks: { font: { size: Math.round(tamFonte * 0.85) } }
                     },
                     y: {
+                        type: "linear",
+                        display: true,
+                        position: "left",
                         beginAtZero: true,
                         ticks: {
                             font: { size: Math.round(tamFonte * 0.85) },
                             callback: (val) => "R$ " + Number(val).toLocaleString("pt-BR")
                         }
+                    },
+                    y1: {
+                        type: "linear",
+                        display: true,
+                        position: "right",
+                        beginAtZero: true,
+                        grid: { drawOnChartArea: false },
+                        ticks: {
+                            font: { size: Math.round(tamFonte * 0.85) },
+                            callback: (val) => val + "%"
+                        }
                     }
                 }
             }
         });
-    }
-    // 4. Top 5 Maiores Despesas
+    }    // 4. Top 5 Maiores Despesas
     const listaTop = document.getElementById("lista-top-despesas");
     if (listaTop) {
         listaTop.innerHTML = "";

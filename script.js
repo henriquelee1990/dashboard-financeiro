@@ -396,7 +396,28 @@ const inputValor = document.createElement("input");
             nomeEl.classList.add("pago");
         }
     }
+// Define 'N' como padrão absoluto para qualquer item que ainda não tenha a regra definida
+    if (!item.regra) item.regra = "N";
 
+    const btnClassificador = document.createElement("button");
+    btnClassificador.className = `btn-classificador classificador-${item.regra}`;
+    btnClassificador.textContent = item.regra;
+    btnClassificador.title = item.regra === "N" ? "Necessidade" : (item.regra === "I" ? "Investimento" : "Desejo");
+
+    btnClassificador.onclick = (e) => {
+        e.preventDefault();
+        // Ciclo contínuo: N -> I -> D -> N
+        if (item.regra === "N") item.regra = "I";
+        else if (item.regra === "I") item.regra = "D";
+        else item.regra = "N";
+        
+        btnClassificador.className = `btn-classificador classificador-${item.regra}`;
+        btnClassificador.textContent = item.regra;
+        btnClassificador.title = item.regra === "N" ? "Necessidade" : (item.regra === "I" ? "Investimento" : "Desejo");
+        
+        salvarDados();
+        // Não chamamos renderizarDashboard() aqui para evitar que o input perca o foco durante a digitação
+    };
     const btnRemover = document.createElement("button");
     btnRemover.className = "btn-remover-item";
     btnRemover.innerHTML = "×";

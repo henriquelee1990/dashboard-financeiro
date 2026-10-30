@@ -435,9 +435,10 @@ const inputValor = document.createElement("input");
         renderizarDashboard();
     };
 
-    linha.appendChild(inputNome);
+   linha.appendChild(inputNome);
     linha.appendChild(inputValor);
     linha.appendChild(switchLabel);
+    linha.appendChild(btnClassificador);
     linha.appendChild(btnRemover);
 
     return linha;

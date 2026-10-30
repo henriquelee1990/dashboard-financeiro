@@ -452,8 +452,8 @@ function atualizarGrafico() {
     // 1. Atualização dos Cards de KPIs
     const kpiPoupanca = document.getElementById("kpi-poupanca");
     const kpiPoupancaSub = document.getElementById("kpi-poupanca-sub");
-    const kpiComprometimento = document.getElementById("kpi-comprometimento");
-    const kpiComprometimentoSub = document.getElementById("kpi-comprometimento-sub");
+const kpiEssenciais = document.getElementById("kpi-essenciais");
+            const kpiEssenciaisSub = document.getElementById("kpi-essenciais-sub");
     const kpiDiario = document.getElementById("kpi-diario");
 if (kpiPoupanca && kpiComprometimento && kpiDiario) {
    let totalInvestido = 0;

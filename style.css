@@ -381,29 +381,6 @@ body {
     flex-shrink: 0;
     padding: 0 4px;
 }
-/* Botão Classificador N/I/D */
-.btn-classificador {
-    width: 28px;
-    height: 28px;
-    border: none;
-    border-radius: 6px;
-    font-weight: 700;
-    font-size: 0.9em;
-    color: #fff;
-    cursor: pointer;
-    flex-shrink: 0;
-    transition: background-color 0.2s, transform 0.1s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
-}
-.btn-classificador:active {
-    transform: scale(0.92);
-}
-.classificador-N { background-color: #3498db; } /* Azul para Necessidade */
-.classificador-I { background-color: #8e44ad; } /* Roxo para Investimento */
-.classificador-D { background-color: #e67e22; } /* Laranja para Desejo */
 /* Interruptor em Bold (3 Estados com Alto Contraste) */
 .switch {
     position: relative;

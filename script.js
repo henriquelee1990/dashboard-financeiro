@@ -455,8 +455,8 @@ function atualizarGrafico() {
 const kpiEssenciais = document.getElementById("kpi-essenciais");
             const kpiEssenciaisSub = document.getElementById("kpi-essenciais-sub");
     const kpiDiario = document.getElementById("kpi-diario");
-if (kpiPoupanca && kpiComprometimento && kpiDiario) {
-   let totalInvestido = 0;
+if (kpiPoupanca && kpiEssenciais && kpiDiario) {
+    let totalInvestido = 0;
         mesAtual.categorias.forEach(cat => {
             if (cat.nome.toLowerCase().includes("investimento")) {
                 totalInvestido += cat.itens.reduce((acc, cur) => acc + Number(cur.valor || 0), 0);
@@ -469,7 +469,21 @@ if (kpiPoupanca && kpiComprometimento && kpiDiario) {
         if (kpiPoupancaSub) {
             kpiPoupancaSub.textContent = `${formatarMoeda(totalInvestido)} alocados`;
         }
+let totalEssenciais = 0;
+        mesAtual.categorias.forEach(cat => {
+            const n = cat.nome.toLowerCase();
+            if (n.includes("moradia") || n.includes("alimenta") || n.includes("saúde") || n.includes("saude") || n.includes("transporte")) {
+                totalEssenciais += cat.itens.reduce((acc, cur) => acc + Number(cur.valor || 0), 0);
+            }
+        });
 
+        const taxaEssenciais = totalEntradas > 0 ? Math.round((totalEssenciais / totalEntradas) * 100) : 0;
+        kpiEssenciais.textContent = `${taxaEssenciais}%`;
+        kpiEssenciais.style.color = taxaEssenciais > 60 ? "var(--perigo)" : (taxaEssenciais > 50 ? "#e67e22" : "var(--primaria)");
+        
+        if (kpiEssenciaisSub) {
+            kpiEssenciaisSub.textContent = `${formatarMoeda(totalEssenciais)} em essenciais`;
+        }
         const mediaDiaria = Math.round(totalDespesas / 30);
         kpiDiario.textContent = formatarMoeda(mediaDiaria);
     }

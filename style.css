@@ -354,7 +354,8 @@ body {
     outline: none;
 }
 
-.item-nome.pago {
+.item-nome.pago,
+.item-valor.pago {
     text-decoration: line-through;
     color: var(--item-riscado);
 }

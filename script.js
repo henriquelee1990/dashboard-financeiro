@@ -708,7 +708,7 @@ let totalEssenciais = 0;
         let ofensiva = 0;
         let totalAcumulado = 0;
         
-        // A variável mesesLista já está declarada no escopo acima (linha 431)
+const mesesLista = Object.keys(dados.meses);
         mesesLista.forEach(nomeMes => {
             const m = dados.meses[nomeMes];
             let invMes = 0;

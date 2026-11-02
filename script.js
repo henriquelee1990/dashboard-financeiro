@@ -368,8 +368,8 @@ const inputValor = document.createElement("input");
     switchSlider.className = "slider";
     switchLabel.appendChild(switchSlider);
     // Suporte aos estados: 0 = aberto, 1 = caixinha, 2 = pago (compatível com true/false antigos)
-    let estadoAtual = item.estado !== undefined ? item.estado : (item.pago ? 2 : 0);
-    aplicarClasseEstado(switchLabel, inputNome, linha, estadoAtual);
+  let estadoAtual = item.estado !== undefined ? item.estado : (item.pago ? 2 : 0);
+    aplicarClasseEstado(switchLabel, inputNome, inputValor, linha, estadoAtual);
 
     switchLabel.onclick = (e) => {
         e.preventDefault();
@@ -378,15 +378,16 @@ const inputValor = document.createElement("input");
         item.estado = estadoAtual;
         item.pago = (estadoAtual === 2); // Mantém compatibilidade com cálculos existentes
         
-        aplicarClasseEstado(switchLabel, inputNome, linha, estadoAtual);
+        aplicarClasseEstado(switchLabel, inputNome, inputValor, linha, estadoAtual);
         salvarDados();
         renderizarDashboard();
     };
 
-    function aplicarClasseEstado(labelEl, nomeEl, linhaEl, est) {
+    function aplicarClasseEstado(labelEl, nomeEl, valorEl, linhaEl, est) {
         labelEl.classList.remove("caixinha", "pago");
         linhaEl.classList.remove("caixinha");
         nomeEl.classList.remove("pago");
+        valorEl.classList.remove("pago");
 
         if (est === 1) {
             labelEl.classList.add("caixinha");
@@ -394,9 +395,9 @@ const inputValor = document.createElement("input");
         } else if (est === 2) {
             labelEl.classList.add("pago");
             nomeEl.classList.add("pago");
+            valorEl.classList.add("pago");
         }
-    }
-    const btnRemover = document.createElement("button");
+    }    const btnRemover = document.createElement("button");
     btnRemover.className = "btn-remover-item";
     btnRemover.innerHTML = "×";
   btnRemover.onclick = () => {

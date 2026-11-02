@@ -546,12 +546,21 @@ let totalEssenciais = 0;
         const ctxHist = canvasHistorico.getContext("2d");
 const mapaMeses = { "janeiro": 0, "fevereiro": 1, "março": 2, "abril": 3, "maio": 4, "junho": 5, "julho": 6, "agosto": 7, "setembro": 8, "outubro": 9, "novembro": 10, "dezembro": 11 };
         const hoje = new Date();
-        const mesesLista = Object.keys(dados.meses).filter(nome => {
-            const [m, a] = nome.toLowerCase().split(" ");
-            const mesIdx = mapaMeses[m];
-            const ano = parseInt(a);
-            return (ano < hoje.getFullYear()) || (ano === hoje.getFullYear() && mesIdx <= hoje.getMonth());
-        });        const histEntradas = [];
+        const mesesLista = Object.keys(dados.meses)
+            .filter(nome => {
+                const [m, a] = nome.toLowerCase().split(" ");
+                const mesIdx = mapaMeses[m];
+                const ano = parseInt(a);
+                return (ano < hoje.getFullYear()) || (ano === hoje.getFullYear() && mesIdx <= hoje.getMonth());
+            })
+            .sort((a, b) => {
+                const [mesA, anoA] = a.toLowerCase().split(" ");
+                const [mesB, anoB] = b.toLowerCase().split(" ");
+                if (parseInt(anoA) !== parseInt(anoB)) {
+                    return parseInt(anoA) - parseInt(anoB);
+                }
+                return mapaMeses[mesA] - mapaMeses[mesB];
+            });        const histEntradas = [];
         const histDespesas = [];
 
         mesesLista.forEach(nomeMes => {

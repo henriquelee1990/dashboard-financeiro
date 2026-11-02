@@ -701,7 +701,67 @@ let totalEssenciais = 0;
                 }
             }
         });
-    }    // 4. Top 5 Maiores Despesas
+    }    
+    // 3.5 Lógica de Gamificação de Investimentos
+    const painelGamificacao = document.getElementById("painel-gamificacao");
+    if (painelGamificacao) {
+        let ofensiva = 0;
+        let totalAcumulado = 0;
+        
+        // A variável mesesLista já está declarada no escopo acima (linha 431)
+        mesesLista.forEach(nomeMes => {
+            const m = dados.meses[nomeMes];
+            let invMes = 0;
+            m.categorias.forEach(cat => {
+                if (cat.nome.toLowerCase().includes("investimento")) {
+                    invMes += cat.itens.reduce((acc, cur) => acc + Number(cur.valor || 0), 0);
+                }
+            });
+            
+            totalAcumulado += invMes;
+            
+            if (invMes > 0) {
+                ofensiva++;
+            } else {
+                ofensiva = 0; // Zera a ofensiva se passar um mês sem investir
+            }
+        });
+
+        if (totalAcumulado > 0 || ofensiva > 0) {
+            painelGamificacao.style.display = "flex";
+            
+            const niveis = [
+                { min: 1, emoji: "🐷", titulo: "Porquinho Simples" },
+                { min: 2, emoji: "🐷🎩", titulo: "Porquinho Arrumado" },
+                { min: 3, emoji: "🐷🏠", titulo: "Porquinho com Casa" },
+                { min: 4, emoji: "🐷🛵", titulo: "Motorizado" },
+                { min: 5, emoji: "🐷💼", titulo: "Investidor Júnior" },
+                { min: 6, emoji: "🐷📈", titulo: "Acionista" },
+                { min: 7, emoji: "🐷🚤", titulo: "Dono de Lancha" },
+                { min: 8, emoji: "🐷✈️", titulo: "Viajante" },
+                { min: 9, emoji: "🐷💎", titulo: "Mãos de Diamante" },
+                { min: 10, emoji: "🐷🚀", titulo: "Rumo à Lua" },
+                { min: 11, emoji: "👑🐷🏰", titulo: "Império Financeiro" },
+                { min: 12, emoji: "👑🐷🌍", titulo: "Domínio Global" }
+            ];
+
+            // Busca o maior nível alcançado pela ofensiva atual
+            let nivelAtual = niveis[0];
+            for (let i = 0; i < niveis.length; i++) {
+                if (ofensiva >= niveis[i].min) {
+                    nivelAtual = niveis[i];
+                }
+            }
+
+            document.getElementById("gamificacao-emoji").textContent = nivelAtual.emoji;
+            document.getElementById("gamificacao-titulo").textContent = nivelAtual.titulo;
+            document.getElementById("gamificacao-streak").textContent = `${ofensiva} ${ofensiva === 1 ? 'mês seguido' : 'meses seguidos'} poupando`;
+            document.getElementById("gamificacao-valor").textContent = formatarMoeda(totalAcumulado);
+        } else {
+            painelGamificacao.style.display = "none";
+        }
+    }
+    // 4. Top 5 Maiores Despesas
     const listaTop = document.getElementById("lista-top-despesas");
     if (listaTop) {
         listaTop.innerHTML = "";

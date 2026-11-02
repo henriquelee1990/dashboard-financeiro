@@ -589,6 +589,58 @@ body {
     border-radius: 4px;
     transition: width 0.3s ease;
 }
+/* Painel de Gamificação de Investimentos */
+.gamificacao-box {
+    background: linear-gradient(135deg, var(--card-bg) 0%, rgba(142, 68, 173, 0.08) 100%);
+    border: 1px solid #8e44ad;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.gamificacao-avatar {
+    font-size: 3.2em;
+    line-height: 1;
+    filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+}
+
+.gamificacao-info {
+    flex: 1;
+    min-width: 200px;
+}
+
+.gamificacao-info h4 {
+    font-size: 1.2em;
+    color: #8e44ad;
+    margin-bottom: 4px;
+}
+
+.gamificacao-info p {
+    font-size: 0.9em;
+    color: var(--texto-secundario);
+    font-weight: 600;
+}
+
+.gamificacao-total {
+    text-align: right;
+    display: flex;
+    flex-direction: column;
+}
+
+.gamificacao-total span {
+    font-size: 0.85em;
+    color: var(--texto-secundario);
+    margin-bottom: 2px;
+}
+
+.gamificacao-total strong {
+    font-size: 1.5em;
+    color: #8e44ad;
+}
 /* Rodapé e Backup */
 .rodape-backup {
     display: flex;

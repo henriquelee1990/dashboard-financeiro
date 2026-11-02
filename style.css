@@ -405,24 +405,23 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #e2e8f0;
-    border: 3px solid #475569;
-    border-radius: 30px;
-    transition: 0.25s;
-    box-sizing: border-box;
+    background-color: #fef3c7;
+    border: 1.5px solid #d97706;
+    transition: .2s;
+    border-radius: 20px;
 }
 
 .slider:before {
     position: absolute;
     content: "";
-    height: 20px;
-    width: 20px;
-    left: 2px;
+    height: 16px;
+    width: 16px;
+    left: 3px;
     bottom: 2px;
-    background-color: #475569;
+    background-color: #fbbf24;
+    box-shadow: 0 0 6px rgba(245, 158, 11, 0.45);
+    transition: .2s;
     border-radius: 50%;
-    transition: 0.25s;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
 }
 
 /* Estado 1: Na Caixinha (Bolinha roxa vibrante no centro) */

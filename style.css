@@ -754,7 +754,24 @@ body {
     font-weight: 700;
     color: var(--perigo);
 }
+.aba-btn {
+    background: var(--card-bg);
+    border: 1.5px solid var(--borda-cor);
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.95em;
+    font-weight: 600;
+    color: var(--texto-secundario);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
 
+.aba-btn.ativa {
+    color: var(--texto-cor);
+    border-color: var(--texto-cor);
+    box-shadow: inset 0 0 0 1.5px var(--texto-cor);
+    font-weight: 700;
+}
 .lista-pendencias {
     display: flex;
     flex-direction: column;

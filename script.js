@@ -859,9 +859,10 @@ function configurarModais() {
             return;
         }
 
-        const mesClonado = JSON.parse(JSON.stringify(dados.meses[dados.mesAtivo]));
+       const mesClonado = JSON.parse(JSON.stringify(dados.meses[dados.mesAtivo]));
         mesClonado.entradas.forEach(e => e.pago = false);
         mesClonado.categorias.forEach(c => c.itens.forEach(i => i.pago = false));
+        mesClonado.anotacoes = ""; // Limpa as anotações para o novo mês
         dados.meses[nome] = mesClonado;
         dados.mesAtivo = nome;
 

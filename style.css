@@ -436,15 +436,15 @@ body {
     background-color: #8a05be;
 }
 
-/* Estado 2: Pago (Verde vivo com contorno escuro) */
+/* Estado 2: Pago (Cinza minimalista) */
 .switch.pago .slider {
-    background-color: #dcfce7;
-    border-color: #15803d;
+    background-color: #e2e8f0;
+    border-color: var(--item-riscado);
 }
 
 .switch.pago .slider:before {
     transform: translateX(32px);
-    background-color: #16a34a;
+    background-color: var(--item-riscado);
 }
 
 /* Realce na linha da despesa guardada */

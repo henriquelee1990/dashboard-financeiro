@@ -325,10 +325,29 @@ const percReal = totalEntradas > 0 ? Math.round((totalDespesas / totalEntradas) 
     barraProgresso.style.width = `${Math.min(percReal, 100)}%`;
     barraProgresso.style.backgroundColor = percReal > 100 ? "var(--perigo)" : "var(--primaria)";
     
-    document.getElementById("termometro-texto").textContent = `${percReal}% da renda gasta`;
+   document.getElementById("termometro-texto").textContent = `${percReal}% da renda gasta`;
+
+    // Bloco de Notas: Carrega e salva os dados do mês atual
+    const txtNotas = document.getElementById("bloco-notas-texto");
+    if (txtNotas) {
+        txtNotas.value = mesAtual.anotacoes || "";
+        txtNotas.onchange = (e) => {
+            mesAtual.anotacoes = e.target.value;
+            salvarDados();
+        };
+    }
 
     atualizarGrafico();
 }
+
+// Evento do botão Formatar
+window.addEventListener("DOMContentLoaded", () => {
+    const btnFormatar = document.getElementById("btn-formatar-notas");
+    const txtNotas = document.getElementById("bloco-notas-texto");
+    if (btnFormatar && txtNotas) {
+        btnFormatar.onclick = () => txtNotas.classList.toggle("fonte-classica");
+    }
+});
 
 // Linhas de Itens (Interruptor Visual + Risco no Texto)
 function criarLinhaItem(item, idx, tipo, catIdx = null) {

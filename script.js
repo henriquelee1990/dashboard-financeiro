@@ -15,13 +15,15 @@ const DADOS_PADRAO = {
                     ]
                 },
                 {
+              {
                     emoji: "🛒",
                     nome: "Alimentação",
                     itens: [
                         { nome: "Supermercado", valor: 800, pago: false }
                     ]
                 }
-            ]
+            ],
+            anotacoes: ""
         }
     }
 };

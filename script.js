@@ -707,8 +707,25 @@ const mesesLista = Object.keys(dados.meses);        const histEntradas = [];
         let ofensiva = 0;
         let totalAcumulado = 0;
         
-const mesesLista = Object.keys(dados.meses);
-        mesesLista.forEach(nomeMes => {
+const mapaMeses = { "janeiro": 0, "fevereiro": 1, "março": 2, "abril": 3, "maio": 4, "junho": 5, "julho": 6, "agosto": 7, "setembro": 8, "outubro": 9, "novembro": 10, "dezembro": 11 };
+        const hoje = new Date();
+        const mesesLista = Object.keys(dados.meses)
+            .filter(nome => {
+                const partes = nome.trim().toLowerCase().split(/\s+/);
+                if (partes.length < 2) return false;
+                const mesIdx = mapaMeses[partes[0]];
+                const ano = parseInt(partes[1]);
+                if (isNaN(ano) || mesIdx === undefined) return false;
+                return (ano < hoje.getFullYear()) || (ano === hoje.getFullYear() && mesIdx <= hoje.getMonth());
+            })
+            .sort((a, b) => {
+                const partesA = a.trim().toLowerCase().split(/\s+/);
+                const partesB = b.trim().toLowerCase().split(/\s+/);
+                const anoA = parseInt(partesA[1]);
+                const anoB = parseInt(partesB[1]);
+                if (anoA !== anoB) return anoA - anoB;
+                return mapaMeses[partesA[0]] - mapaMeses[partesB[0]];
+            });        mesesLista.forEach(nomeMes => {
             const m = dados.meses[nomeMes];
             let invMes = 0;
             m.categorias.forEach(cat => {

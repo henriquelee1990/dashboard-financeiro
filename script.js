@@ -14,7 +14,6 @@ const DADOS_PADRAO = {
                         { nome: "Aluguel", valor: 1500, pago: false }
                     ]
                 },
-                {
               {
                     emoji: "🛒",
                     nome: "Alimentação",
@@ -25,8 +24,7 @@ const DADOS_PADRAO = {
             ],
             anotacoes: ""
         }
-    }
-};
+    }};
 const EMOJIS_DISPONIVEIS = [
     "🏠", "🛒", "🚗", "💊", "🎓", "🎉", "✈️", "💡", 
     "🛡️", "📦", "🍽️", "🏋️", "💻", "🐶", "👗", "📱", 

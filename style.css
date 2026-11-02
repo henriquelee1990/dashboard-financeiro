@@ -641,9 +641,55 @@ body {
     font-size: 1.5em;
     color: #8e44ad;
 }
-/* Rodapé e Backup */
-.rodape-backup {
+/* Bloco de Notas Clássico */
+.bloco-notas-container {
+    background: #ffffff;
+    border: 1px solid var(--borda-cor);
+    border-radius: 8px;
+    margin: 0 0 24px 0;
     display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+body[data-tema] .bloco-notas-container {
+    background: var(--card-bg);
+}
+
+.bloco-notas-header {
+    background: var(--caixa-titulo-bg);
+    border-bottom: 1px solid var(--borda-cor);
+    padding: 6px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.bloco-notas-titulo {
+    font-size: 0.9em;
+    color: var(--texto-secundario);
+    font-weight: 600;
+}
+
+.bloco-notas-textarea {
+    width: 100%;
+    min-height: 250px;
+    border: none;
+    resize: vertical;
+    padding: 12px;
+    font-family: inherit;
+    font-size: 1em;
+    color: var(--texto-cor);
+    background: transparent;
+    outline: none;
+}
+
+.bloco-notas-textarea.fonte-classica {
+    font-family: "Consolas", "Courier New", monospace;
+}
+
+/* Rodapé e Backup */
+.rodape-backup {    display: flex;
     justify-content: center;
     gap: 12px;
     margin-top: 32px;

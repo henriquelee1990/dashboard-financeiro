@@ -405,8 +405,7 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #fef3c7;
-    border: 1.5px solid #d97706;
+    background-color: #ccc;
     transition: .2s;
     border-radius: 20px;
 }
@@ -418,12 +417,10 @@ body {
     width: 16px;
     left: 3px;
     bottom: 2px;
-    background-color: #fbbf24;
-    box-shadow: 0 0 6px rgba(245, 158, 11, 0.45);
+    background-color: #ffffff;
     transition: .2s;
     border-radius: 50%;
 }
-
 /* Estado 1: Na Caixinha (Bolinha roxa vibrante no centro) */
 .switch.caixinha .slider {
     background-color: #f3e8ff;
